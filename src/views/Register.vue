@@ -68,6 +68,9 @@
         </v-card>
       </v-flex>
     </v-layout>
+    <v-overlay :value="overlay">
+      <i class="fa-5x fas fa-spinner fa-pulse"></i>
+    </v-overlay>
   </v-container>
 </template>
 
@@ -84,47 +87,57 @@ export default Vue.extend({
       email: "",
       password: "",
       repeatPassword: "",
+      overlay: false,
 
-      usernameRules: [(v: any) => !!v || "Username is required"],
+      usernameRules: [(v: string) => !!v || "Username is required"],
       emailRules: [
-          (v: any) => !!v || "E-mail is required",
-          (v: string) => /^(.+)@(.+)+\.(.+)$/.test(v) || "E-mail must be valid"
+        (v: string) => !!v || "E-mail is required",
+        (v: string) => /^(.+)@(.+)+\.(.+)$/.test(v) || "E-mail must be valid"
       ],
       passwordRules: [
-          (v: any) => !!v || "Password is required",
-          (v: string | any[]) => v.length >= 6 || "Minimum Of 6 Charachters Is Required"
-      ],
+        (v: string) => !!v || "Password is required",
+        (v: string | any[]) =>
+          v.length >= 6 || "Minimum Of 6 Charachters Is Required"
+      ]
     };
   },
   methods: {
     register() {
-      if((this.$refs.register as Vue & { validate: () => boolean}).validate()){
-        const username : string = this.username;
-        firebase.auth().createUserWithEmailAndPassword(this.email, this.password).catch(function(error: { code: string; message: string; }) {
-          console.log(error.code + "/n" + error.message)
-        });
+      if (
+        (this.$refs.register as Vue & { validate: () => boolean }).validate()
+      ) {
+        this.overlay = true;
+        const username: string = this.username;
+        firebase
+          .auth()
+          .createUserWithEmailAndPassword(this.email, this.password)
+          .catch(function(error: { code: string; message: string }) {
+            console.log(error.code + "/n" + error.message);
+          });
         firebase.auth().onAuthStateChanged(function(user) {
           if (user) {
-            user.updateProfile({
-              displayName: username,
-
-            }).then(function() {
-
-              const displayName = user.displayName;
-              window.alert(displayName)
-            }, function(error) {
-              // An error happened.
-            });
-
+            user
+              .updateProfile({
+                displayName: username
+              })
+              .then(
+                function() {
+                  const displayName = user.displayName;
+                  router.push({ name: "Login" });
+                },
+                function(error) {
+                  console.log(error);
+                }
+              );
           }
         });
       }
     }
   },
   computed: {
-    passwordConfirmRule() : any {
+    passwordConfirmRule(): any {
       return this.password === this.repeatPassword || "passwords must match";
-    },
+    }
   }
 });
 </script>
