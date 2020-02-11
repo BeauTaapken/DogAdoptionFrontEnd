@@ -1,0 +1,12 @@
+language: node_js
+node_js:
+  - "13"
+
+dist: trusty
+
+addons:
+  sonarcloud:
+    organization: "beautaapken"
+
+script:
+  - sonar-scanner
