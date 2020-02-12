@@ -10,8 +10,8 @@ export default Vue.extend({
   name: "Home" as string,
   data: function() {
     return {
-      user: "",
-    }
+      user: "" as any
+    };
   },
   mounted(): void {
     this.user = firebase.auth().currentUser;
