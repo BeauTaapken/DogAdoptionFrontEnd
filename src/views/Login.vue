@@ -74,10 +74,8 @@ export default Vue.extend({
           .auth()
           .signInWithEmailAndPassword(this.email, this.password)
           .catch(function(error) {
-            // Handle Errors here.
-            const errorCode = error.code;
-            const errorMessage = error.message;
-            // ...
+            console.log(error);
+            return;
           });
         firebase.auth().onAuthStateChanged(function(user) {
           if (user) {
