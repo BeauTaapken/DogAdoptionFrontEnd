@@ -118,7 +118,8 @@ export default Vue.extend({
           if (user) {
             user
               .updateProfile({
-                displayName: username
+                displayName: username,
+                photoURL: null
               })
               .then(
                 function() {
