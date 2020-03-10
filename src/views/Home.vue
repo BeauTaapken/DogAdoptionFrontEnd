@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <h1>Welcome to DogAdopt {{ user.displayName }}</h1>
-    <v-btn @click="getdata">testing</v-btn>
+    <v-btn @click="addAdvert">testing</v-btn>
   </v-container>
 </template>
 
@@ -19,24 +19,30 @@ export default Vue.extend({
   },
   mounted(): void {
     this.user = firebase.auth().currentUser;
+    if (this.user === null) {
+      this.user = firebase.auth().currentUser;
+    }
   },
   methods: {
-    getdata() {
+    addAdvert() {
+      // if(this.user === null){
+      //   this.user = firebase.auth().currentUser
+      // }
       this.user
         .getIdToken(/* forceRefresh */ true)
-        .then(function(idToken: string) {
+        .then((idToken: string) => {
           console.log(idToken);
           axios
             .post(
-              "/advert/addadvert/",
+              "/advert/addadvert",
               {
                 UUID: {
-                  UUID: "uuid",
-                  Username: ""
+                  UUID: this.user.uid,
+                  Username: this.user.displayName
                 },
-                image: "t",
-                title: "",
-                description: "",
+                img: "t",
+                title: "now it has a title",
+                description: "description as well",
                 breed: 1,
                 age: 15
               },
@@ -45,7 +51,8 @@ export default Vue.extend({
                   id: idToken
                 }
               }
-            ).then(response => {
+            )
+            .then(response => {
               console.log(response);
             })
             .catch(error => {

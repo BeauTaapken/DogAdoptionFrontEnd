@@ -1,0 +1,51 @@
+<template>
+  <v-toolbar>
+    <v-toolbar-title>{{ username }}</v-toolbar-title>
+
+    <v-spacer></v-spacer>
+
+    <v-toolbar-items>
+      <v-btn to="/Home" text>Home</v-btn>
+      <v-btn to="/users" text>MAL users</v-btn>
+      <v-btn to="/textchat" text>Textchat</v-btn>
+      <v-btn to="/searchfriends" text>Search friends</v-btn>
+      <v-btn to="/webcamchat" text>Videochat</v-btn>
+    </v-toolbar-items>
+
+    <template v-if="$vuetify.breakpoint.smAndUp">
+      <v-btn @click="logout" icon>
+        <i class="fas fa-power-off"></i>
+      </v-btn>
+    </template>
+  </v-toolbar>
+</template>
+
+<script lang="ts">
+import Vue from "vue";
+import store from "../store/index";
+import * as firebase from "firebase";
+import router from "@/router";
+
+export default Vue.extend({
+  name: "Navbar",
+  data: () => ({
+    username: "" as any
+  }),
+  mounted(): void {
+      this.username = firebase.auth().currentUser.displayName;
+  },
+  methods: {
+    logout() {
+      firebase
+        .auth()
+        .signOut()
+        .then(function() {
+          router.push({ name: "Login" })
+        })
+        .catch(function(error) {
+          // An error happened.
+        });
+    }
+  }
+});
+</script>

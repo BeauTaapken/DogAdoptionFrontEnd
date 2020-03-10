@@ -111,7 +111,7 @@ export default Vue.extend({
                         photoURL: null
                       })
                       .then(() => {
-                        router.push({ path: "Home" });
+                        router.push({ name: "Home" });
                       })
                       .catch(error => {
                         this.overlay = false;
