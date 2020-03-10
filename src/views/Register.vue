@@ -141,7 +141,6 @@ export default Vue.extend({
                   Username: this.username
                 })
                 .then(response => {
-                  console.log(response);
                   if (response.data.responseCode === "Done") {
                     router.push({ name: "Login" });
                   } else {

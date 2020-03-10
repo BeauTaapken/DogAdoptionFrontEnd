@@ -101,13 +101,10 @@ export default Vue.extend({
           .signInWithEmailAndPassword(this.email, this.password)
           .then(user => {
             if (user.user) {
-              console.log("testing");
-              console.log(user);
               axios
                 .get("user/getuser/" + user.user.uid)
                 .then(response => {
                   if (user.user) {
-                    console.log(response);
                     user.user
                       .updateProfile({
                         displayName: response.data,
