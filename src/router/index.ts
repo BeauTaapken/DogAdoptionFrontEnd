@@ -3,6 +3,7 @@ import VueRouter from "vue-router";
 import Login from "@/views/Login.vue";
 import Register from "@/views/Register.vue";
 import Home from "@/views/Home.vue";
+import AddAdvert from "@/views/AddAdvert.vue";
 
 Vue.use(VueRouter);
 
@@ -21,6 +22,11 @@ const routes = [
     path: "/home",
     name: "Home",
     component: Home
+  },
+  {
+    path: "/addAdvert",
+    name: "AddAdvert",
+    component: AddAdvert
   }
 ];
 

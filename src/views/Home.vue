@@ -6,9 +6,9 @@
 </template>
 
 <script lang="ts">
-import firebase from "firebase";
 import Vue from "vue";
 import axios from "axios";
+import store from "../store/index";
 
 export default Vue.extend({
   name: "Home" as string,
@@ -18,16 +18,12 @@ export default Vue.extend({
     };
   },
   mounted(): void {
-    this.user = firebase.auth().currentUser;
-    if (this.user === null) {
-      this.user = firebase.auth().currentUser;
-    }
+    this.user = store.getters.getUser;
+    console.log(this.user)
   },
   methods: {
     addAdvert() {
-      // if(this.user === null){
-      //   this.user = firebase.auth().currentUser
-      // }
+      this.user = store.getters.getUser;
       this.user
         .getIdToken(/* forceRefresh */ true)
         .then((idToken: string) => {
