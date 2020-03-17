@@ -8,12 +8,16 @@
             label="Select the picture of the dog"
             name="img"
             v-model="image"
-            counter=true
-            show-size=true
+            counter
+            show-size
+            multiple
             :rules="imageRule"
+            @change="getBase64"
             required
           >
           </v-file-input>
+
+          <v-text-field v-model="base64" v-show="false"></v-text-field>
 
           <v-text-field
             label="Title"
@@ -35,15 +39,12 @@
             required
           ></v-text-field>
 
-          <v-text-field
-            label="Breed"
-            name="breed"
-            prepend-icon="mdi-lock"
-            type="number"
+          <v-select
+            :items="items"
+            item-text="breedName"
+            label="Select the dogs breed"
             v-model.number="breed"
-            :rules="numberRules"
-            required
-          ></v-text-field>
+          ></v-select>
 
           <v-text-field
             label="Age"
@@ -60,6 +61,24 @@
         </v-form>
       </v-flex>
     </v-layout>
+    <v-dialog v-model="dialog" width="500">
+      <v-card>
+        <v-card-title class="headline" primary-title>
+          {{ this.dialogHeader }}
+        </v-card-title>
+
+        <v-card-text>{{ this.dialogInfo }}</v-card-text>
+
+        <v-divider></v-divider>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="primary" text @click="dialog = false">
+            Oke
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 
@@ -74,31 +93,44 @@ export default Vue.extend({
   data: function() {
     return {
       user: null as any,
+      items: [] as any,
       image: null as any,
       title: null as string | null,
       description: null as string | null,
       breed: null as number | null,
       age: null as number | null,
       base64: null as any,
+      dialog: false as boolean,
+      dialogHeader: "" as string,
+      dialogInfo: "" as string,
 
       imageRule: [(v: Blob) => !!v || "Image is required"],
-      textRules: [
-        (v: string) => !!v || "This is required",
-      ],
-      numberRules: [
-        (v: number) => !!v || "This is required",
-      ]
+      textRules: [(v: string) => !!v || "This is required"],
+      numberRules: [(v: number) => !!v || "This is required"]
     };
   },
   mounted(): void {
     this.user = store.getters.getUser;
+
+    axios.get("/enum/getdogbreeds").then(response => {
+      console.log(response.data);
+      for (let i = 0; i < response.data.breeds.length; i++) {
+        const lowercase = response.data.breeds[i]
+          .toLowerCase()
+          .replace(/_/g, " ");
+        const breed = lowercase.charAt(0).toUpperCase() + lowercase.slice(1);
+        this.items.push({value: i, breedName: breed});
+      }
+      console.log(this.items);
+    });
   },
   methods: {
     async addAdvert() {
-    //TODO turn image in v-file-input to base64
-      firebase.auth().currentUser
-        .getIdToken(/* forceRefresh */ true)
+      firebase
+        .auth()
+        .currentUser.getIdToken(/* forceRefresh */ true)
         .then((idToken: string) => {
+          console.log(this.breed);
           axios
             .post(
               "/advert/addadvert",
@@ -121,6 +153,15 @@ export default Vue.extend({
             )
             .then(response => {
               console.log(response);
+              this.dialog = true;
+              if (response.data.responseCode === "Done") {
+                this.dialogHeader = "Your advert has been created";
+                this.dialogInfo = "";
+              } else {
+                this.dialogHeader = "Something went wrong";
+                this.dialogInfo =
+                  "Something went wrong. Try again or wait a few minutes to create an advert.";
+              }
             })
             .catch(error => {
               console.log(error);
@@ -132,20 +173,22 @@ export default Vue.extend({
         });
     },
 
-    // getBase64() {
-    //   const reader = new FileReader();
-    //   if (this.image !== null) {
-    //     reader.onload = () => {
-    //       // console.log(reader.result)
-    //       this.base64 = reader.result;
-    //       return reader.result;
-    //     };
-    //     reader.readAsDataURL(this.image[0]);
-    //     reader.onerror = error => {
-    //       console.log("Error: ", error);
-    //     };
-    //   }
-    // }
+    getBase64() {
+      if (this.image !== null) {
+        for (let i = 0; i < this.image.length; i++) {
+          const reader = new FileReader();
+          reader.readAsDataURL(this.image[i]);
+
+          reader.onloadend = () => {
+            this.base64 = reader.result;
+            // this.base64.push(reader.result.toString());
+          };
+          reader.onerror = error => {
+            console.log("Error: ", error);
+          };
+        }
+      }
+    }
   }
 });
 </script>
