@@ -24,8 +24,7 @@
     "vue-router": "^3.1.5",
     "vuetify": "^2.1.0",
     "vuex": "^3.1.2",
-    "vuex-persist": "^2.2.0",
-    "@/components": "latest"
+    "vuex-persist": "^2.2.0"
   },
   "devDependencies": {
     "@types/jest": "^24.0.19",
