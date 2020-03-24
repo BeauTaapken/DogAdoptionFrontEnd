@@ -1,7 +1,14 @@
 <template>
   <v-container>
     <h1>Welcome to DogAdopt {{ user.displayName }}</h1>
-    <infinite-loading @infinite="infiniteHandler"> </infinite-loading>
+    <div ref="advertLocation">
+      <Advert
+        v-for="advert in this.getAdvert()"
+        :key="advert.advertId"
+        :data="advert"
+      />
+    </div>
+    <infinite-loading @infinite="infiniteHandler"></infinite-loading>
   </v-container>
 </template>
 
@@ -11,6 +18,9 @@ import axios from "axios";
 import store from "../store/persistStore";
 import noPersistStore from "@/store/noPersistStore";
 import InfiniteLoading from "vue-infinite-loading";
+import advert from "@/components/advert.vue";
+
+const Advert = Vue.extend(advert);
 
 export default Vue.extend({
   name: "Home" as string,
@@ -22,6 +32,7 @@ export default Vue.extend({
     };
   },
   components: {
+    Advert,
     InfiniteLoading
   },
   mounted(): void {
@@ -30,14 +41,26 @@ export default Vue.extend({
   },
   methods: {
     infiniteHandler: function($state: any) {
+      const advertLocation = this.$refs.advertLocation;
       try {
         axios
           .get("/advert/getadverts?page=" + this.page + "&size=" + this.size)
           .then(response => {
-            noPersistStore.dispatch("setAdverts", response.data);
+            const data = response.data;
+            noPersistStore.dispatch("setAdverts", data);
+            // for(let i = 0; i < data.length; i++){
+            //   console.log(data[i].img)
+            //   const instance = new AdvertClass({
+            //     propsData: {
+            //       data: data[i]
+            //     }
+            //   });
+            //   instance.$mount();
+            //   advertLocation.appendChild(instance.$el)
+            // }
             $state.loaded();
             if (response.data.length <= 0) {
-              console.log(noPersistStore.getters.getAdverts)
+              console.log(noPersistStore.getters.getAdverts);
               $state.complete();
             }
           });
@@ -45,8 +68,12 @@ export default Vue.extend({
       } catch (e) {
         console.log(e);
       }
+    },
+    getAdvert() {
+      return noPersistStore.getters.getAdverts;
     }
   },
+
   beforeDestroy(): void {
     noPersistStore.dispatch("resetAdverts");
   }
