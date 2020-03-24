@@ -12,7 +12,7 @@ import Vue from "vue";
 import Navbar from "./components/Navbar.vue";
 import * as firebase from "firebase";
 import router from "./router";
-import store from "./store/index";
+import store from "./store/persistStore";
 
 export default Vue.extend({
   name: "App",
@@ -34,7 +34,7 @@ export default Vue.extend({
     firebase.auth().onAuthStateChanged((user) => {
       console.log(user)
       if (user) {
-        store.commit("setUser", user);
+        store.dispatch("setUser", user);
         this.user = store.getters.getUser;
         // router.push({ name: "Home" });
       } else {

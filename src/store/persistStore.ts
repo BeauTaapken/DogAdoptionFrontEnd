@@ -13,18 +13,30 @@ const vuexPersist = new VuexPersist({
 export default new Vuex.Store({
   plugins: [vuexPersist.plugin],
   state: {
-    firebasecomponent: null as any,
-    user: null as any
+    user: null as any,
+    adverts: [] as []
   },
   mutations: {
-    setUser (state, value) {
+    SET_USER (state, value) {
       state.user = value;
     },
-    setFirebaseComponent(state, value) {
-      state.firebasecomponent = value;
-    }
+    // SET_ADVERTS(state, value) {
+    //   if(state.adverts === null){
+    //     state.adverts = [];
+    //   }
+    //   for(let i = 0; i < value.length; i++){
+    //     state.adverts.push(value[i]);
+    //   }
+    // }
   },
-  actions: {},
+  actions: {
+    setUser ({commit}, value) {
+      commit('SET_USER', value);
+    },
+    // setAdverts({commit}, data){
+    //   commit('SET_ADVERTS', data);
+    // },
+  },
   modules: {},
   // @Component({
   //   computed: {
@@ -35,6 +47,6 @@ export default new Vuex.Store({
   // })
   getters: {
     getUser: state => state.user,
-    getFirebaseComponent: state => state.firebasecomponent
+    // getAdverts: state => state.adverts
   }
 });

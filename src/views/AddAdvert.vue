@@ -85,7 +85,7 @@
 <script lang="ts">
 import Vue from "vue";
 import axios from "axios";
-import store from "../store/index";
+import store from "../store/persistStore";
 import * as firebase from "firebase";
 
 export default Vue.extend({
@@ -119,58 +119,60 @@ export default Vue.extend({
           .toLowerCase()
           .replace(/_/g, " ");
         const breed = lowercase.charAt(0).toUpperCase() + lowercase.slice(1);
-        this.items.push({value: i, breedName: breed});
+        this.items.push({ value: i, breedName: breed });
       }
       console.log(this.items);
     });
   },
   methods: {
     async addAdvert() {
-      firebase
-        .auth()
-        .currentUser.getIdToken(/* forceRefresh */ true)
-        .then((idToken: string) => {
-          console.log(this.breed);
-          axios
-            .post(
-              "/advert/addadvert",
-              {
-                UUID: {
-                  UUID: this.user.uid,
-                  Username: this.user.displayName
+      const firebaseUser = firebase.auth().currentUser;
+      if (firebaseUser !== null) {
+        firebaseUser
+          .getIdToken(/* forceRefresh */ true)
+          .then((idToken: string) => {
+            console.log(this.breed);
+            axios
+              .post(
+                "/advert/addadvert",
+                {
+                  UUID: {
+                    UUID: this.user.uid,
+                    Username: this.user.displayName
+                  },
+                  img: this.base64,
+                  title: this.title,
+                  description: this.description,
+                  breed: Number(this.breed),
+                  age: Number(this.age)
                 },
-                img: this.base64,
-                title: this.title,
-                description: this.description,
-                breed: Number(this.breed),
-                age: Number(this.age)
-              },
-              {
-                headers: {
-                  id: idToken
+                {
+                  headers: {
+                    id: idToken
+                  }
                 }
-              }
-            )
-            .then(response => {
-              console.log(response);
-              this.dialog = true;
-              if (response.data.responseCode === "Done") {
-                this.dialogHeader = "Your advert has been created";
-                this.dialogInfo = "";
-              } else {
-                this.dialogHeader = "Something went wrong";
-                this.dialogInfo =
-                  "Something went wrong. Try again or wait a few minutes to create an advert.";
-              }
-            })
-            .catch(error => {
-              console.log(error);
-            });
-        })
-        .catch((error: any) => {
-          // Handle error
-          console.log(error);
-        });
+              )
+              .then(response => {
+                console.log(response);
+                this.dialog = true;
+                if (response.data.responseCode === "Done") {
+                  this.dialogHeader = "Your advert has been created";
+                  this.dialogInfo = "";
+                } else {
+                  this.dialogHeader = "Something went wrong";
+                  this.dialogInfo =
+                    "Something went wrong. Try again or wait a few minutes to create an advert.";
+                }
+              })
+              .catch(error => {
+                console.log(error);
+              });
+          })
+          .catch((error: any) => {
+            // Handle error
+            console.log(error);
+          });
+      }
     },
 
     getBase64() {
