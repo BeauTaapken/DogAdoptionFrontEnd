@@ -1,69 +1,54 @@
 <template>
   <v-container>
     <h1>Welcome to DogAdopt {{ user.displayName }}</h1>
-    <v-btn @click="addAdvert">testing</v-btn>
+    <infinite-loading @infinite="infiniteHandler"> </infinite-loading>
   </v-container>
 </template>
 
 <script lang="ts">
-import firebase from "firebase";
 import Vue from "vue";
 import axios from "axios";
+import store from "../store/persistStore";
+import noPersistStore from "@/store/noPersistStore";
+import InfiniteLoading from "vue-infinite-loading";
 
 export default Vue.extend({
   name: "Home" as string,
   data: function() {
     return {
-      user: "" as any
+      user: "" as any,
+      page: 0 as number,
+      size: 10 as number
     };
   },
+  components: {
+    InfiniteLoading
+  },
   mounted(): void {
-    this.user = firebase.auth().currentUser;
-    if (this.user === null) {
-      this.user = firebase.auth().currentUser;
-    }
+    this.user = store.getters.getUser;
+    console.log(this.user);
   },
   methods: {
-    addAdvert() {
-      // if(this.user === null){
-      //   this.user = firebase.auth().currentUser
-      // }
-      this.user
-        .getIdToken(/* forceRefresh */ true)
-        .then((idToken: string) => {
-          console.log(idToken);
-          axios
-            .post(
-              "/advert/addadvert",
-              {
-                UUID: {
-                  UUID: this.user.uid,
-                  Username: this.user.displayName
-                },
-                img: "t",
-                title: "now it has a title",
-                description: "description as well",
-                breed: 1,
-                age: 15
-              },
-              {
-                headers: {
-                  id: idToken
-                }
-              }
-            )
-            .then(response => {
-              console.log(response);
-            })
-            .catch(error => {
-              console.log(error);
-            });
-        })
-        .catch((error: any) => {
-          // Handle error
-          console.log(error);
-        });
+    infiniteHandler: function($state: any) {
+      try {
+        axios
+          .get("/advert/getadverts?page=" + this.page + "&size=" + this.size)
+          .then(response => {
+            noPersistStore.dispatch("setAdverts", response.data);
+            $state.loaded();
+            if (response.data.length <= 0) {
+              console.log(noPersistStore.getters.getAdverts)
+              $state.complete();
+            }
+          });
+        this.page++;
+      } catch (e) {
+        console.log(e);
+      }
     }
+  },
+  beforeDestroy(): void {
+    noPersistStore.dispatch("resetAdverts");
   }
 });
 </script>

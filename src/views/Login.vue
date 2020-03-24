@@ -40,7 +40,6 @@
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn color="primary" @click="login">Login</v-btn>
-            <!--            <v-btn color="primary" @click="logout">logout</v-btn>-->
           </v-card-actions>
         </v-card>
       </v-flex>
@@ -74,6 +73,7 @@ import firebase from "firebase";
 import router from "../router";
 import Vue from "vue";
 import axios from "axios";
+import store from "../store/persistStore";
 
 export default Vue.extend({
   name: "Login" as string,
@@ -111,6 +111,7 @@ export default Vue.extend({
                         photoURL: null
                       })
                       .then(() => {
+                        store.commit("setUser", user.user);
                         router.push({ name: "Home" });
                       })
                       .catch(error => {
@@ -137,18 +138,6 @@ export default Vue.extend({
           });
       }
     }
-    //TODO change location of the logout function to the navbar that will have a logout button
-    // logout() {
-    //   firebase
-    //     .auth()
-    //     .signOut()
-    //     .then(function() {
-    //       // Sign-out successful.
-    //     })
-    //     .catch(function(error) {
-    //       // An error happened.
-    //     });
-    // }
   }
 });
 </script>
