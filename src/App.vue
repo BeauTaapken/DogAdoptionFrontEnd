@@ -47,7 +47,7 @@ export default Vue.extend({
       firebase.auth().onAuthStateChanged((user) => {
         console.log(user)
         if (user) {
-          store.commit("setUser", user);
+          store.dispatch("setUser", user);
           this.user = store.getters.getUser;
           // router.push({ name: "Home" });
         } else {

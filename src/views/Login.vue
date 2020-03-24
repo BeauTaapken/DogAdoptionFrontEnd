@@ -111,7 +111,7 @@ export default Vue.extend({
                         photoURL: null
                       })
                       .then(() => {
-                        store.commit("setUser", user.user);
+                        store.dispatch("setUser", user.user);
                         router.push({ name: "Home" });
                       })
                       .catch(error => {
