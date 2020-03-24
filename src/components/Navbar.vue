@@ -6,7 +6,7 @@
 
     <v-toolbar-items>
       <v-btn to="/Home" text>Home</v-btn>
-      <v-btn to="/users" text>MAL users</v-btn>
+      <v-btn to="/addAdvert" text>Add an advert</v-btn>
       <v-btn to="/textchat" text>Textchat</v-btn>
       <v-btn to="/searchfriends" text>Search friends</v-btn>
       <v-btn to="/webcamchat" text>Videochat</v-btn>
@@ -22,7 +22,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import store from "../store/index";
+import store from "../store/persistStore";
 import * as firebase from "firebase";
 import router from "@/router";
 
@@ -32,14 +32,16 @@ export default Vue.extend({
     username: "" as any
   }),
   mounted(): void {
-      this.username = firebase.auth().currentUser.displayName;
+    this.username = store.getters.getUser.displayName;
   },
   methods: {
     logout() {
       firebase
         .auth()
         .signOut()
-        .then(function() {
+        .then(() => {
+          sessionStorage.clear();
+          store.commit("setUser", null);
           router.push({ name: "Login" })
         })
         .catch(function(error) {

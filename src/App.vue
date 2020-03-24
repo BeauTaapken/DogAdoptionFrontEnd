@@ -12,7 +12,7 @@ import Vue from "vue";
 import Navbar from "./components/Navbar.vue";
 import * as firebase from "firebase";
 import router from "./router";
-import index from "./store/index";
+import store from "./store/persistStore";
 
 export default Vue.extend({
   name: "App",
@@ -28,20 +28,32 @@ export default Vue.extend({
   // },
 
   data: () => ({
-    user: "" as any
+    user: null as any
   }),
   mounted(): void {
-    this.user = firebase.auth().currentUser;
-    if(this.user === null){
-      router.push({ name: "Login" });
-    }
+    firebase.auth().onAuthStateChanged((user) => {
+      console.log(user)
+      if (user) {
+        store.dispatch("setUser", user);
+        this.user = store.getters.getUser;
+        // router.push({ name: "Home" });
+      } else {
+        router.push({ name: "Login" });
+      }
+    });
   },
   watch: {
     $route() {
-      this.user = firebase.auth().currentUser;
-      if(this.user === null){
-        router.push({ name: "Login" });
-      }
+      firebase.auth().onAuthStateChanged((user) => {
+        console.log(user)
+        if (user) {
+          store.commit("setUser", user);
+          this.user = store.getters.getUser;
+          // router.push({ name: "Home" });
+        } else {
+          router.push({ name: "Login" });
+        }
+      });
     }
   }
 });
