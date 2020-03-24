@@ -31,39 +31,29 @@ export default Vue.extend({
     user: null as any
   }),
   mounted(): void {
-    console.log("getting new onauth")
     firebase.auth().onAuthStateChanged((user) => {
       console.log(user)
       if (user) {
         store.commit("setUser", user);
         this.user = store.getters.getUser;
+        // router.push({ name: "Home" });
       } else {
         router.push({ name: "Login" });
       }
     });
-    // this.user = store.getters.getUser;
-    // if(this.user === null){
-    //   router.push({ name: "Login" });
-    // }
   },
   watch: {
     $route() {
-      console.log("getting new onauth")
       firebase.auth().onAuthStateChanged((user) => {
         console.log(user)
         if (user) {
           store.commit("setUser", user);
           this.user = store.getters.getUser;
+          // router.push({ name: "Home" });
         } else {
           router.push({ name: "Login" });
         }
       });
-      // store.commit("setUser", firebase.auth().currentUser);
-      // this.user = store.getters.getUser;
-      // console.log(firebase.auth().currentUser);
-      // if(this.user === null){
-      //   router.push({ name: "Login" });
-      // }
     }
   }
 });
