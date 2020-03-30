@@ -1,9 +1,10 @@
 <template>
   <v-container fluid fill-height>
-    <v-layout justify-center>
+    <v-layout justify-center align-center>
       <v-flex xs12 sm8 md4>
         <v-form ref="registerform">
           <v-file-input
+            filled
             accept="image/*"
             label="Select the picture of the dog"
             name="img"
@@ -14,12 +15,14 @@
             :rules="imageRule"
             @change="getBase64"
             required
+            prepend-icon=""
           >
           </v-file-input>
 
           <v-text-field v-model="base64" v-show="false"></v-text-field>
 
           <v-text-field
+            filled
             label="Title"
             name="title"
             type="text"
@@ -28,16 +31,18 @@
             required
           ></v-text-field>
 
-          <v-text-field
+          <v-textarea
+            filled
             label="Description"
             name="description"
             type="text"
             v-model="description"
             :rules="textRules"
             required
-          ></v-text-field>
+          ></v-textarea>
 
           <v-select
+            filled
             :items="items"
             item-text="breedName"
             label="Select the dogs breed"
@@ -45,6 +50,7 @@
           ></v-select>
 
           <v-text-field
+            filled
             label="Age"
             name="age"
             type="number"
@@ -180,7 +186,6 @@ export default Vue.extend({
 
           reader.onloadend = () => {
             this.base64 = reader.result;
-            // this.base64.push(reader.result.toString());
           };
           reader.onerror = error => {
             console.log("Error: ", error);

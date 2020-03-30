@@ -1,5 +1,5 @@
 <template>
-  <v-toolbar>
+  <v-app-bar app>
     <v-toolbar-items>
       <v-btn to="/Home" text>Home</v-btn>
       <v-btn to="/addAdvert" text>Add an advert</v-btn>
@@ -17,7 +17,7 @@
         <i class="fas fa-power-off"></i>
       </v-btn>
     </template>
-  </v-toolbar>
+  </v-app-bar>
 </template>
 
 <script lang="ts">

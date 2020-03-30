@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container overflow-auto>
     <h1 class="text-center">Welcome to DogAdopt {{ user.displayName }}</h1>
     <div ref="advertLocation">
       <Advert
