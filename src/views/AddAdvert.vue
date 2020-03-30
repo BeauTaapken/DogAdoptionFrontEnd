@@ -22,7 +22,6 @@
           <v-text-field
             label="Title"
             name="title"
-            prepend-icon="mdi-account"
             type="text"
             v-model="title"
             :rules="textRules"
@@ -32,7 +31,6 @@
           <v-text-field
             label="Description"
             name="description"
-            prepend-icon="mdi-email"
             type="text"
             v-model="description"
             :rules="textRules"
@@ -49,7 +47,6 @@
           <v-text-field
             label="Age"
             name="age"
-            prepend-icon="mdi-lock"
             type="number"
             v-model.number="age"
             :rules="numberRules"
