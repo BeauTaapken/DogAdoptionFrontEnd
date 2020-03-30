@@ -56,7 +56,7 @@
             required
           ></v-text-field>
           <v-btn @click="addAdvert">
-            What is image
+            Add advert
           </v-btn>
         </v-form>
       </v-flex>

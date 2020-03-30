@@ -1,9 +1,5 @@
 <template>
   <v-toolbar>
-    <v-toolbar-title>{{ username }}</v-toolbar-title>
-
-    <v-spacer></v-spacer>
-
     <v-toolbar-items>
       <v-btn to="/Home" text>Home</v-btn>
       <v-btn to="/addAdvert" text>Add an advert</v-btn>
@@ -11,6 +7,10 @@
       <v-btn to="/searchfriends" text>Search friends</v-btn>
       <v-btn to="/webcamchat" text>Videochat</v-btn>
     </v-toolbar-items>
+
+    <v-spacer></v-spacer>
+
+    <v-toolbar-title>{{ username }}</v-toolbar-title>
 
     <template v-if="$vuetify.breakpoint.smAndUp">
       <v-btn @click="logout" icon>

@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <h1>Welcome to DogAdopt {{ user.displayName }}</h1>
+    <h1 class="text-center">Welcome to DogAdopt {{ user.displayName }}</h1>
     <div ref="advertLocation">
       <Advert
         v-for="advert in this.getAdvert()"
@@ -18,7 +18,7 @@ import axios from "axios";
 import store from "../store/persistStore";
 import noPersistStore from "@/store/noPersistStore";
 import InfiniteLoading from "vue-infinite-loading";
-import advert from "@/components/advert.vue";
+import advert from "../components/AdvertPreview.vue";
 
 const Advert = Vue.extend(advert);
 
@@ -48,16 +48,6 @@ export default Vue.extend({
           .then(response => {
             const data = response.data;
             noPersistStore.dispatch("setAdverts", data);
-            // for(let i = 0; i < data.length; i++){
-            //   console.log(data[i].img)
-            //   const instance = new AdvertClass({
-            //     propsData: {
-            //       data: data[i]
-            //     }
-            //   });
-            //   instance.$mount();
-            //   advertLocation.appendChild(instance.$el)
-            // }
             $state.loaded();
             if (response.data.length <= 0) {
               console.log(noPersistStore.getters.getAdverts);
