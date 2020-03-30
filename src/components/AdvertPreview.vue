@@ -1,13 +1,18 @@
 <template>
-  <v-card class="card">
-    <div class="flex-container">
-      <div >
-        <v-img class="img" v-bind:src="data.img"></v-img>
-      </div>
-      <div>{{ data.title }}</div>
-      <div>{{ correctBreed(data.breed) }}</div>
-      <div>Age: {{ data.age }}</div>
-    </div>
+  <v-card class="mx-auto ma-7 card" max-width="700" outlined>
+    <v-img
+            height="300"
+            v-bind:src="data.img"
+    ></v-img>
+
+    <v-list-item three-line>
+      <v-list-item-content>
+        <v-list-item-title class="headline mb-1">{{ data.title }}</v-list-item-title>
+        <v-list-item-subtitle>Breed: {{ correctBreed(data.breed) }}</v-list-item-subtitle>
+        <v-list-item-subtitle>Age: {{ data.age }}</v-list-item-subtitle>
+      </v-list-item-content>
+    </v-list-item>
+
   </v-card>
 </template>
 
@@ -33,18 +38,6 @@ export default {
 </script>
 
 <style scoped>
-
-.img {
-  object-fit: contain;
-  background-size: cover;
-}
-
-.flex-container {
-  display: flex;
-  flex-wrap: nowrap;
-  align-items: center;
-}
-
 .flex-container > div {
   width: 25%;
   margin: 10px;
@@ -54,6 +47,12 @@ export default {
 }
 
 .card {
-  margin-bottom: 10px;
+  transition: transform .2s;
+}
+
+.card:hover {
+  transform: scale(1.05);
+  cursor: pointer;
+  box-shadow: 0px 0px 20px 3px dimgray;
 }
 </style>
