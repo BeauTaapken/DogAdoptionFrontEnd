@@ -33,6 +33,7 @@ export default new Vuex.Store({
   //   }
   // })
   getters: {
-    getAdverts: state => state.adverts
+    getAdverts: state => state.adverts,
+    // getAdvert: state => id => state.adverts.find(x => x.advertId === id)
   }
 });

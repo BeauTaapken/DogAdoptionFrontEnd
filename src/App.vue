@@ -32,7 +32,6 @@ export default Vue.extend({
   }),
   mounted(): void {
     firebase.auth().onAuthStateChanged((user) => {
-      console.log(user)
       if (user) {
         store.dispatch("setUser", user);
         this.user = store.getters.getUser;
@@ -45,7 +44,6 @@ export default Vue.extend({
   watch: {
     $route() {
       firebase.auth().onAuthStateChanged((user) => {
-        console.log(user)
         if (user) {
           store.dispatch("setUser", user);
           this.user = store.getters.getUser;

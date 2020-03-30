@@ -1,6 +1,6 @@
 <template>
   <v-container overflow-auto>
-    <h1 class="text-center">Welcome to DogAdopt {{ user.displayName }}</h1>
+    <h1 class="text-center">Welcome to DogAdopt, {{ user.displayName }}!</h1>
     <div ref="advertLocation">
       <Advert
         v-for="advert in this.getAdvert()"
@@ -50,7 +50,6 @@ export default Vue.extend({
             noPersistStore.dispatch("setAdverts", data);
             $state.loaded();
             if (response.data.length <= 0) {
-              console.log(noPersistStore.getters.getAdverts);
               $state.complete();
             }
           });

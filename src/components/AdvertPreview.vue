@@ -1,5 +1,5 @@
 <template>
-  <v-card class="mx-auto ma-7 card" max-width="700" outlined>
+  <v-card class="mx-auto ma-7 card" max-width="700" outlined @click="goToAdvert(data)">
     <v-img
             height="300"
             v-bind:src="data.img"
@@ -12,11 +12,13 @@
         <v-list-item-subtitle>Age: {{ data.age }}</v-list-item-subtitle>
       </v-list-item-content>
     </v-list-item>
-
   </v-card>
 </template>
 
-<script>
+<script lang="ts">
+  import advert from "../views/Advert.vue";
+  import router from "../router";
+
 export default {
   name: "advert",
   props: {
@@ -25,12 +27,13 @@ export default {
     }
   },
   methods: {
-    correctBreed(breed) {
+    correctBreed(breed: string) {
       const lowercaseBreed = breed.toLowerCase().replace(/_/g, " ");
       return lowercaseBreed.charAt(0).toUpperCase() + lowercaseBreed.slice(1);
     },
 
-    goToAdvert() {
+    goToAdvert(advertData: any) {
+      router.push({ path: "Advert/" + advertData.advertId });
       //TODO make advert page that has props asking for data
     }
   }
