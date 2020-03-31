@@ -1,12 +1,12 @@
 <template>
   <div>
-    <v-btn @click="test(advertId)"></v-btn>
-    {{ advertId }}
+    {{ advert.title }}
   </div>
 </template>
 
 <script lang="ts">
-  import noPersistStore from "@/store/noPersistStore";
+  // import noPersistStore from "@/store/noPersistStore";
+  import store from "@/store/persistStore";
 
 export default {
   name: "Advert",
@@ -15,14 +15,20 @@ export default {
       required: true
     }
   },
+  data: function() {
+    return {
+      advert: "" as any
+    };
+  },
   mounted(): void {
-
+    this.advert = store.getters.getAdvert(this.advertId);
+    console.log(this.advert)
     //TODO get advert based on advertid with api call
   },
   methods: {
     test(advert: any){
-      console.log(noPersistStore.getters.getAdverts)
-      console.log(noPersistStore.getters.getAdvert(advert));
+      console.log(store.getters.getAdverts);
+      // console.log(noPersistStore.getters.getAdvert(advert));
     }
   }
 };

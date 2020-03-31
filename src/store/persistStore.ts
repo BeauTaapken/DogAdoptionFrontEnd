@@ -20,22 +20,25 @@ export default new Vuex.Store({
     SET_USER (state, value) {
       state.user = value;
     },
-    // SET_ADVERTS(state, value) {
-    //   if(state.adverts === null){
-    //     state.adverts = [];
-    //   }
-    //   for(let i = 0; i < value.length; i++){
-    //     state.adverts.push(value[i]);
-    //   }
-    // }
+    SET_ADVERTS(state, value) {
+      for(let i = 0; i < value.length; i++){
+        state.adverts.push(value[i]);
+      }
+    },
+    RESET_ADVERTS(state, value){
+      state.adverts = [];
+    }
   },
   actions: {
     setUser ({commit}, value) {
       commit('SET_USER', value);
     },
-    // setAdverts({commit}, data){
-    //   commit('SET_ADVERTS', data);
-    // },
+    setAdverts({commit}, data){
+      commit('SET_ADVERTS', data);
+    },
+    resetAdverts({commit}){
+      commit('RESET_ADVERTS')
+    }
   },
   modules: {},
   // @Component({
@@ -47,6 +50,12 @@ export default new Vuex.Store({
   // })
   getters: {
     getUser: state => state.user,
-    // getAdverts: state => state.adverts
+    getAdverts: state => state.adverts,
+    getAdvert(state) {
+      return (keyword: number) =>
+        state.adverts.find(
+          (advert: { advertId: number }) => advert.advertId == keyword
+        );
+    }
   }
 });
