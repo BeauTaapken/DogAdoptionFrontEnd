@@ -30,7 +30,7 @@ const routes = [
     component: AddAdvert
   },
   {
-    path: "/Advert/:advertId",
+    path: "/advert/:advertId",
     name: "Advert",
     component: Advert,
     props: true

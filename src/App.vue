@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <v-content>
-      <Navbar v-if="user"/>
+      <Navbar class="background" v-if="user"/>
       <router-view/>
     </v-content>
   </v-app>
@@ -36,8 +36,8 @@ export default Vue.extend({
         store.dispatch("setUser", user);
         this.user = store.getters.getUser;
         // router.push({ name: "Home" });
-      } else {
-        router.push({ name: "Login" });
+      // } else {
+      //   router.push({ name: "Login" });
       }
     });
   },
@@ -48,11 +48,17 @@ export default Vue.extend({
           store.dispatch("setUser", user);
           this.user = store.getters.getUser;
           // router.push({ name: "Home" });
-        } else {
-          router.push({ name: "Login" });
+        // } else {
+        //   router.push({ name: "Login" });
         }
       });
     }
   }
 });
 </script>
+
+<style scoped>
+  .background {
+    background: linear-gradient(to right, #36d1dc, #3bc8dd, #47aee0, #5b86e5);
+  }
+</style>

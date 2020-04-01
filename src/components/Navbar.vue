@@ -51,3 +51,9 @@ export default Vue.extend({
   }
 });
 </script>
+
+<style scoped>
+  .background {
+    background-image: url("../assets/paw.png");
+  }
+</style>

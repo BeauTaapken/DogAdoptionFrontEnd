@@ -22,6 +22,8 @@ export default new Vuex.Store({
     },
     SET_ADVERTS(state, value) {
       for(let i = 0; i < value.length; i++){
+        const lowercaseBreed = value[i].breed.toLowerCase().replace(/_/g, " ");
+        value[i].breed = lowercaseBreed.charAt(0).toUpperCase() + lowercaseBreed.slice(1);
         state.adverts.push(value[i]);
       }
     },
@@ -41,13 +43,6 @@ export default new Vuex.Store({
     }
   },
   modules: {},
-  // @Component({
-  //   computed: {
-  //     ...mapGetters('UserModule', {
-  //        'getUser': any
-  //     })
-  //   }
-  // })
   getters: {
     getUser: state => state.user,
     getAdverts: state => state.adverts,
