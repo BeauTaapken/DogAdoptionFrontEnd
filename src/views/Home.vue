@@ -16,7 +16,6 @@
 import Vue from "vue";
 import axios from "axios";
 import store from "../store/persistStore";
-// import noPersistStore from "@/store/noPersistStore";
 import InfiniteLoading from "vue-infinite-loading";
 import advert from "../components/AdvertPreview.vue";
 

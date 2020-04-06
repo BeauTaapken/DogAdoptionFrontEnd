@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid fill-height class="ma-7">
+  <v-container fluid fill-height>
     <v-layout justify-center>
       <v-flex xs12 sm8 md6>
         <v-row>
@@ -16,7 +16,15 @@
             </v-carousel>
           </v-col>
           <v-col cols="4">
-
+            <v-card height="400" class="mx-auto card" max-width="700" outlined>
+              <MglMap :accessToken="accessToken" :mapStyle="mapStyle" heigt="200" @load="onMapLoaded">
+                <MglMarker :coordinates="mapMarker">
+                  <v-icon slot="marker">mdi-map-marker</v-icon>
+                </MglMarker>
+              </MglMap>
+              <v-card-text>Location: placeholder</v-card-text>
+              <v-card-text>Minimum price: placeholder</v-card-text>
+            </v-card>
           </v-col>
         </v-row>
         <v-row>
@@ -30,8 +38,11 @@
           </h3>
         </v-row>
         <v-row>
-          Breed: {{ advert.age }} <br />
-          Age: {{ advert.breed }}
+          Breed: {{ advert.breed }} <br />
+          Age: {{ advert.age }}
+        </v-row>
+        <v-row>
+          {{ advertUser }}
         </v-row>
       </v-flex>
     </v-layout>
@@ -41,6 +52,9 @@
 <script lang="ts">
 import Vue from "vue";
 import store from "@/store/persistStore";
+import Mapbox, {Marker} from "mapbox-gl";
+import { MglMap, MglMarker } from "vue-mapbox";
+import axios from "axios";
 
 export default Vue.extend({
   name: "Advert",
@@ -49,26 +63,59 @@ export default Vue.extend({
       required: true
     }
   },
+  components: {
+    MglMap,
+    MglMarker
+  },
   data: function() {
     return {
       advert: null as any,
-      user: null as any
+      user: null as any,
+      advertUser: "" as string,
+      accessToken: "pk.eyJ1IjoiYmVhdXRhYXBrZW4iLCJhIjoiY2s4bzYzODdlMHZxODNvbzJmN3NkajFvNiJ9.O-fXCB7kq00f3Znp68y9rQ",
+      mapStyle: "mapbox://styles/mapbox/streets-v11",
+      mapbox: null as any,
+      map: null as any,
+      mapMarker: [0, 0] as [any, any],
     };
   },
   created(): void {
     this.advert = store.getters.getAdvert(this.advertId);
-    console.log(this.advert);
+    console.log(this.advert)
+    this.mapbox = Mapbox;
   },
   mounted(): void {
     this.user = store.getters.getUser;
     //TODO get advert based data like bids with api call
+
+    axios
+    .get("user/getuser/" + this.advert.UUID.UUID)
+    .then(response => {
+      this.advertUser = response.data;
+    })
+    .catch(error => {
+      console.log(error)
+    });
   },
-  methods: {}
+  methods: {
+    onMapLoaded(event: any) {
+      console.log(this.advert.longtitude);
+      console.log(this.advert.latitude);
+      event.map.jumpTo({"center": [this.advert.longtitude, this.advert.latitude], "zoom": 8});
+      //this.mapMarker = [this.advert.longtitude, this.advert.latitude];
+      new Marker().setLngLat([this.advert.longtitude, this.advert.latitude]).addTo(event.map)
+      console.log(this.mapMarker)
+    }
+  }
 });
 </script>
 
 <style scoped>
 .rounded {
   border-radius: 10px;
+}
+#map {
+  width: 100%;
+  height: 500px;
 }
 </style>
