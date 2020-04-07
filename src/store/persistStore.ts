@@ -27,7 +27,11 @@ export default new Vuex.Store({
         state.adverts.push(value[i]);
       }
     },
-    RESET_ADVERTS(state, value){
+    RESET_ADVERTS(state){
+      state.adverts = [];
+    },
+    RESET_VALUES(state) {
+      state.user = null;
       state.adverts = [];
     }
   },
@@ -39,7 +43,10 @@ export default new Vuex.Store({
       commit('SET_ADVERTS', data);
     },
     resetAdverts({commit}){
-      commit('RESET_ADVERTS')
+      commit('RESET_ADVERTS');
+    },
+    resetValues({commit}){
+      commit('RESET_VALUES');
     }
   },
   modules: {},

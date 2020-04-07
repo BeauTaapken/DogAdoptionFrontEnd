@@ -12,14 +12,16 @@
               show-arrows-on-hover
             >
               <!--          <v-carousel-item v-for="(image, i) in advert.img" :key="i" v-bind:src="image">-->
-              <v-carousel-item v-bind:src="advert.img"> </v-carousel-item>
+              <v-carousel-item v-bind:src="advert.img"/>
             </v-carousel>
           </v-col>
           <v-col cols="4">
             <v-card height="400" class="mx-auto card" max-width="700" outlined>
               <MglMap :accessToken="accessToken" :mapStyle="mapStyle" heigt="200" @load="onMapLoaded"/>
-              <v-card-text>Location: placeholder</v-card-text>
-              <v-card-text>Minimum price: placeholder</v-card-text>
+              <v-card-title>Location:</v-card-title>
+              <v-card-text>{{ advert.place }}</v-card-text>
+              <v-card-title>User:</v-card-title>
+              <v-card-text>{{ advertUser }}</v-card-text>
             </v-card>
           </v-col>
         </v-row>
@@ -34,11 +36,11 @@
           </h3>
         </v-row>
         <v-row>
-          Breed: {{ advert.breed }} <br />
-          Age: {{ advert.age }}
-        </v-row>
-        <v-row>
-          {{ advertUser }}
+          <v-card-title>Breed:</v-card-title>
+          <v-card-text>{{ advert.breed }}</v-card-text>
+
+          <v-card-title>Age:</v-card-title>
+          <v-card-text>{{ advert.age }}</v-card-text>
         </v-row>
       </v-flex>
     </v-layout>
@@ -91,7 +93,7 @@ export default Vue.extend({
   },
   methods: {
     onMapLoaded(event: any) {
-      event.map.jumpTo({"center": [this.advert.longtitude, this.advert.latitude], "zoom": 8});
+      event.map.jumpTo({ "center": [this.advert.longtitude, this.advert.latitude], "zoom": 13 });
 
       new Marker().setLngLat([this.advert.longtitude, this.advert.latitude]).addTo(event.map)
     }

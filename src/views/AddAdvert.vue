@@ -2,7 +2,7 @@
   <v-container fluid fill-height>
     <v-layout justify-center align-center>
       <v-flex xs24 sm16 md6>
-        <v-form ref="registerform">
+        <v-form ref="addadvertform">
           <v-row>
             <v-col>
               <v-file-input
@@ -16,12 +16,11 @@
                 multiple
                 :rules="imageRule"
                 @change="getBase64"
-                required
                 prepend-icon=""
               >
               </v-file-input>
 
-              <v-text-field v-model="base64" v-show="false"></v-text-field>
+              <v-text-field v-model="base64" v-show="false" required></v-text-field>
 
               <v-text-field
                 filled
@@ -49,6 +48,7 @@
                 item-text="breedName"
                 label="Select the dogs breed"
                 v-model.number="breed"
+                required
               ></v-select>
 
               <v-text-field
@@ -60,6 +60,9 @@
                 :rules="numberRules"
                 required
               ></v-text-field>
+              <v-text-field v-model="longtitude" v-show="false" required :rules="numberRules"></v-text-field>
+              <v-text-field v-model="longtitude" v-show="false" required :rules="numberRules"></v-text-field>
+              <v-text-field v-model="place" v-show="false" required :rules="textRules"></v-text-field>
               <v-btn @click="addAdvert">
                 Add advert
               </v-btn>
@@ -113,12 +116,12 @@ export default Vue.extend({
     return {
       user: null as any,
       items: [] as any,
-      image: null as any,
+      image: null as Blob | null,
       title: null as string | null,
       description: null as string | null,
       breed: null as number | null,
       age: null as number | null,
-      base64: null as any,
+      base64: null as string | null,
       dialog: false as boolean,
       dialogHeader: "" as string,
       dialogInfo: "" as string,
@@ -126,6 +129,9 @@ export default Vue.extend({
         "pk.eyJ1IjoiYmVhdXRhYXBrZW4iLCJhIjoiY2s4bzYzODdlMHZxODNvbzJmN3NkajFvNiJ9.O-fXCB7kq00f3Znp68y9rQ",
       mapStyle: "mapbox://styles/mapbox/streets-v11",
       mapbox: null as any,
+      longtitude: null as number | null,
+      latitude: null as number | null,
+      place: null as string | null,
 
       imageRule: [(v: Blob) => !!v || "Image is required"],
       textRules: [(v: string) => !!v || "This is required"],
@@ -142,7 +148,6 @@ export default Vue.extend({
     this.user = store.getters.getUser;
 
     axios.get("/enum/getdogbreeds").then(response => {
-      console.log(response.data);
       for (let i = 0; i < response.data.breeds.length; i++) {
         const lowercase = response.data.breeds[i]
           .toLowerCase()
@@ -150,57 +155,68 @@ export default Vue.extend({
         const breed = lowercase.charAt(0).toUpperCase() + lowercase.slice(1);
         this.items.push({ value: i, breedName: breed });
       }
-      console.log(this.items);
     });
   },
   methods: {
     async addAdvert() {
-      const firebaseUser = firebase.auth().currentUser;
-      if (firebaseUser !== null) {
-        firebaseUser
-          .getIdToken(/* forceRefresh */ true)
-          .then((idToken: string) => {
-            console.log(this.breed);
-            axios
-              .post(
-                "/advert/addadvert",
-                {
-                  UUID: {
-                    UUID: this.user.uid,
-                    Username: this.user.displayName
+      if (
+        (this.$refs.addadvertform as Vue & {
+          validate: () => boolean;
+        }).validate()
+      ) {
+        const firebaseUser = firebase.auth().currentUser;
+        if (firebaseUser !== null) {
+          firebaseUser
+            .getIdToken(/* forceRefresh */ true)
+            .then((idToken: string) => {
+              axios
+                .post(
+                  "/advert/addadvert",
+                  {
+                    UUID: {
+                      UUID: this.user.uid,
+                      Username: this.user.displayName
+                    },
+                    img: this.base64,
+                    title: this.title,
+                    description: this.description,
+                    breed: Number(this.breed),
+                    age: Number(this.age),
+                    longtitude: this.longtitude,
+                    latitude: this.latitude,
+                    place: this.place,
                   },
-                  img: this.base64,
-                  title: this.title,
-                  description: this.description,
-                  breed: Number(this.breed),
-                  age: Number(this.age)
-                },
-                {
-                  headers: {
-                    id: idToken
+                  {
+                    headers: {
+                      id: idToken
+                    }
                   }
-                }
-              )
-              .then(response => {
-                console.log(response);
-                this.dialog = true;
-                if (response.data.responseCode === "Done") {
-                  this.dialogHeader = "Your advert has been created";
-                  this.dialogInfo = "";
-                } else {
-                  this.dialogHeader = "Something went wrong";
-                  this.dialogInfo =
-                    "Something went wrong. Try again or wait a few minutes to create an advert.";
-                }
-              })
-              .catch(error => {
-                console.log(error);
-              });
-          })
-          .catch((error: any) => {
-            // Handle error
-            console.log(error);
-          });
+                )
+                .then(response => {
+                  this.dialog = true;
+                  if (response.data.responseCode === "Done") {
+                    this.dialogHeader = "Your advert has been created";
+                    this.dialogInfo = "";
+                  } else {
+                    this.dialogHeader = "Something went wrong";
+                    this.dialogInfo =
+                      "Something went wrong. Try again or wait a few minutes to create an advert.";
+                  }
+                })
+                .catch(error => {
+                  console.log(error);
+                });
+            })
+            .catch((error: any) => {
+              // Handle error
+              console.log(error);
+            });
+        }
+      }
+      else{
+        this.dialog = true;
+        this.dialogHeader = "No location selected";
+        this.dialogInfo = "To add an advert you need to select a location in the map";
       }
     },
 
@@ -227,13 +243,14 @@ export default Vue.extend({
         new MapboxGeocoder({
           accessToken: this.accessToken,
           mapboxgl: Mapbox,
-          marker: true
+          marker: true,
+          getItemValue: (e: any) => {
+            this.longtitude = e.geometry.coordinates[0];
+            this.latitude = e.geometry.coordinates[1];
+            this.place = e.place_name;
+          }
         })
       );
-    },
-
-    onGeocoder(event: any) {
-      console.log(event);
     }
   }
 });
