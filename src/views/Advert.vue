@@ -17,11 +17,7 @@
           </v-col>
           <v-col cols="4">
             <v-card height="400" class="mx-auto card" max-width="700" outlined>
-              <MglMap :accessToken="accessToken" :mapStyle="mapStyle" heigt="200" @load="onMapLoaded">
-                <MglMarker :coordinates="mapMarker">
-                  <v-icon slot="marker">mdi-map-marker</v-icon>
-                </MglMarker>
-              </MglMap>
+              <MglMap :accessToken="accessToken" :mapStyle="mapStyle" heigt="200" @load="onMapLoaded"/>
               <v-card-text>Location: placeholder</v-card-text>
               <v-card-text>Minimum price: placeholder</v-card-text>
             </v-card>
@@ -53,7 +49,7 @@
 import Vue from "vue";
 import store from "@/store/persistStore";
 import Mapbox, {Marker} from "mapbox-gl";
-import { MglMap, MglMarker } from "vue-mapbox";
+import { MglMap } from "vue-mapbox";
 import axios from "axios";
 
 export default Vue.extend({
@@ -64,8 +60,7 @@ export default Vue.extend({
     }
   },
   components: {
-    MglMap,
-    MglMarker
+    MglMap
   },
   data: function() {
     return {
@@ -74,14 +69,11 @@ export default Vue.extend({
       advertUser: "" as string,
       accessToken: "pk.eyJ1IjoiYmVhdXRhYXBrZW4iLCJhIjoiY2s4bzYzODdlMHZxODNvbzJmN3NkajFvNiJ9.O-fXCB7kq00f3Znp68y9rQ",
       mapStyle: "mapbox://styles/mapbox/streets-v11",
-      mapbox: null as any,
-      map: null as any,
-      mapMarker: [0, 0] as [any, any],
+      mapbox: null as any
     };
   },
   created(): void {
     this.advert = store.getters.getAdvert(this.advertId);
-    console.log(this.advert)
     this.mapbox = Mapbox;
   },
   mounted(): void {
@@ -99,12 +91,9 @@ export default Vue.extend({
   },
   methods: {
     onMapLoaded(event: any) {
-      console.log(this.advert.longtitude);
-      console.log(this.advert.latitude);
       event.map.jumpTo({"center": [this.advert.longtitude, this.advert.latitude], "zoom": 8});
-      //this.mapMarker = [this.advert.longtitude, this.advert.latitude];
+
       new Marker().setLngLat([this.advert.longtitude, this.advert.latitude]).addTo(event.map)
-      console.log(this.mapMarker)
     }
   }
 });
@@ -113,9 +102,5 @@ export default Vue.extend({
 <style scoped>
 .rounded {
   border-radius: 10px;
-}
-#map {
-  width: 100%;
-  height: 500px;
 }
 </style>

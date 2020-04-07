@@ -1,66 +1,79 @@
 <template>
   <v-container fluid fill-height>
     <v-layout justify-center align-center>
-      <v-flex xs12 sm8 md4>
+      <v-flex xs24 sm16 md6>
         <v-form ref="registerform">
-          <v-file-input
-            filled
-            accept="image/*"
-            label="Select the picture of the dog"
-            name="img"
-            v-model="image"
-            counter
-            show-size
-            multiple
-            :rules="imageRule"
-            @change="getBase64"
-            required
-            prepend-icon=""
-          >
-          </v-file-input>
+          <v-row>
+            <v-col>
+              <v-file-input
+                filled
+                accept="image/*"
+                label="Select the picture of the dog"
+                name="img"
+                v-model="image"
+                counter
+                show-size
+                multiple
+                :rules="imageRule"
+                @change="getBase64"
+                required
+                prepend-icon=""
+              >
+              </v-file-input>
 
-          <v-text-field v-model="base64" v-show="false"></v-text-field>
+              <v-text-field v-model="base64" v-show="false"></v-text-field>
 
-          <v-text-field
-            filled
-            label="Title"
-            name="title"
-            type="text"
-            v-model="title"
-            :rules="textRules"
-            required
-          ></v-text-field>
+              <v-text-field
+                filled
+                label="Title"
+                name="title"
+                type="text"
+                v-model="title"
+                :rules="textRules"
+                required
+              ></v-text-field>
 
-          <v-textarea
-            filled
-            label="Description"
-            name="description"
-            type="text"
-            v-model="description"
-            :rules="textRules"
-            required
-          ></v-textarea>
+              <v-textarea
+                filled
+                label="Description"
+                name="description"
+                type="text"
+                v-model="description"
+                :rules="textRules"
+                required
+              ></v-textarea>
 
-          <v-select
-            filled
-            :items="items"
-            item-text="breedName"
-            label="Select the dogs breed"
-            v-model.number="breed"
-          ></v-select>
+              <v-select
+                filled
+                :items="items"
+                item-text="breedName"
+                label="Select the dogs breed"
+                v-model.number="breed"
+              ></v-select>
 
-          <v-text-field
-            filled
-            label="Age"
-            name="age"
-            type="number"
-            v-model.number="age"
-            :rules="numberRules"
-            required
-          ></v-text-field>
-          <v-btn @click="addAdvert">
-            Add advert
-          </v-btn>
+              <v-text-field
+                filled
+                label="Age"
+                name="age"
+                type="number"
+                v-model.number="age"
+                :rules="numberRules"
+                required
+              ></v-text-field>
+              <v-btn @click="addAdvert">
+                Add advert
+              </v-btn>
+            </v-col>
+
+            <v-col>
+              <MglMap
+                :accessToken="accessToken"
+                :mapStyle="mapStyle"
+                heigt="200"
+                @load="onMapLoaded"
+              />
+            </v-col>
+          </v-row>
         </v-form>
       </v-flex>
     </v-layout>
@@ -90,6 +103,9 @@ import Vue from "vue";
 import axios from "axios";
 import store from "../store/persistStore";
 import * as firebase from "firebase";
+import Mapbox from "mapbox-gl";
+import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
+import { MglMap } from "vue-mapbox";
 
 export default Vue.extend({
   name: "AddAdvert",
@@ -106,11 +122,21 @@ export default Vue.extend({
       dialog: false as boolean,
       dialogHeader: "" as string,
       dialogInfo: "" as string,
+      accessToken:
+        "pk.eyJ1IjoiYmVhdXRhYXBrZW4iLCJhIjoiY2s4bzYzODdlMHZxODNvbzJmN3NkajFvNiJ9.O-fXCB7kq00f3Znp68y9rQ",
+      mapStyle: "mapbox://styles/mapbox/streets-v11",
+      mapbox: null as any,
 
       imageRule: [(v: Blob) => !!v || "Image is required"],
       textRules: [(v: string) => !!v || "This is required"],
       numberRules: [(v: number) => !!v || "This is required"]
     };
+  },
+  components: {
+    MglMap
+  },
+  created() {
+    this.mapbox = Mapbox;
   },
   mounted(): void {
     this.user = store.getters.getUser;
@@ -192,6 +218,22 @@ export default Vue.extend({
           };
         }
       }
+    },
+
+    onMapLoaded(event: any) {
+      event.map.jumpTo({ center: [5, 52], zoom: 8 });
+
+      event.map.addControl(
+        new MapboxGeocoder({
+          accessToken: this.accessToken,
+          mapboxgl: Mapbox,
+          marker: true
+        })
+      );
+    },
+
+    onGeocoder(event: any) {
+      console.log(event);
     }
   }
 });
