@@ -21,12 +21,6 @@ export default Vue.extend({
     Navbar
   },
 
-  // data() {
-  //   return {
-  //     user: "" as any
-  //   };
-  // },
-
   data: () => ({
     user: null as any
   }),
@@ -36,8 +30,8 @@ export default Vue.extend({
         store.dispatch("setUser", user);
         this.user = store.getters.getUser;
         // router.push({ name: "Home" });
-      // } else {
-      //   router.push({ name: "Login" });
+        // } else {
+        //   router.push({ name: "Login" });
       }
     });
   },
@@ -48,8 +42,8 @@ export default Vue.extend({
           store.dispatch("setUser", user);
           this.user = store.getters.getUser;
           // router.push({ name: "Home" });
-        // } else {
-        //   router.push({ name: "Login" });
+          // } else {
+          //   router.push({ name: "Login" });
         }
       });
     }

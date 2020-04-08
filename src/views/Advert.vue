@@ -22,6 +22,11 @@
               <v-card-text>{{ advert.place }}</v-card-text>
               <v-card-title>User:</v-card-title>
               <v-card-text>{{ advertUser }}</v-card-text>
+              <v-card-actions>
+                <v-btn v-if="isSameUser" @click="UpdateAdvert" class="primary">Update advert</v-btn>
+                <v-btn v-if="isSameUser" @click="DeleteAdvert" class="primary">Delete advert</v-btn>
+                <v-btn v-if="!isSameUser">Mail owner of dog</v-btn>
+              </v-card-actions>
             </v-card>
           </v-col>
         </v-row>
@@ -53,6 +58,7 @@ import store from "@/store/persistStore";
 import Mapbox, {Marker} from "mapbox-gl";
 import { MglMap } from "vue-mapbox";
 import axios from "axios";
+import {isSameRoute} from "vue-router/src/util/route";
 
 export default Vue.extend({
   name: "Advert",
@@ -71,12 +77,16 @@ export default Vue.extend({
       advertUser: "" as string,
       accessToken: "pk.eyJ1IjoiYmVhdXRhYXBrZW4iLCJhIjoiY2s4bzYzODdlMHZxODNvbzJmN3NkajFvNiJ9.O-fXCB7kq00f3Znp68y9rQ",
       mapStyle: "mapbox://styles/mapbox/streets-v11",
-      mapbox: null as any
+      mapbox: null as any,
+      isSameUser: false as boolean
     };
   },
   created(): void {
     this.advert = store.getters.getAdvert(this.advertId);
     this.mapbox = Mapbox;
+    console.log(this.advert)
+
+
   },
   mounted(): void {
     this.user = store.getters.getUser;
@@ -86,6 +96,7 @@ export default Vue.extend({
     .get("user/getuser/" + this.advert.UUID.UUID)
     .then(response => {
       this.advertUser = response.data;
+      this.isSameUser = this.user.uid === this.advert.UUID.UUID;
     })
     .catch(error => {
       console.log(error)
@@ -96,6 +107,21 @@ export default Vue.extend({
       event.map.jumpTo({ "center": [this.advert.longtitude, this.advert.latitude], "zoom": 13 });
 
       new Marker().setLngLat([this.advert.longtitude, this.advert.latitude]).addTo(event.map)
+    },
+
+    loggedInUserIsAdvertOwner(){
+      console.log(this.advertUser)
+      console.log(this.advert.UUID.UUID)
+      console.log(this.advertUser !== this.advert.UUID.UUID)
+      return this.advertUser !== this.advert.UUID.UUID;
+    },
+
+    UpdateAdvert() {
+      console.log("update")
+    },
+
+    DeleteAdvert() {
+      console.log("delete")
     }
   }
 });

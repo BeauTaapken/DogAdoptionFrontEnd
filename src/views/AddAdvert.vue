@@ -74,6 +74,7 @@
                 :mapStyle="mapStyle"
                 heigt="200"
                 @load="onMapLoaded"
+                class="rounded"
               />
             </v-col>
           </v-row>
@@ -256,4 +257,8 @@ export default Vue.extend({
 });
 </script>
 
-<style scoped></style>
+<style scoped>
+  .rounded {
+    border-radius: 10px;
+  }
+</style>
