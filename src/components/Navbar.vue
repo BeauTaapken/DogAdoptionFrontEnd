@@ -47,6 +47,11 @@ export default Vue.extend({
         });
 
     }
+  },
+  watch: {
+    $route() {
+      this.username = store.getters.getUser.displayName;
+    }
   }
 });
 </script>

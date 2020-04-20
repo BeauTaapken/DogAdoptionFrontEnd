@@ -189,7 +189,7 @@ export default Vue.extend({
                   },
                   {
                     headers: {
-                      id: idToken
+                      firebaseToken: idToken
                     }
                   }
                 )
