@@ -4,6 +4,7 @@ import Login from "@/views/Login.vue";
 import Register from "@/views/Register.vue";
 import Home from "@/views/Home.vue";
 import AddAdvert from "@/views/AddAdvert.vue";
+import Advert from "@/views/Advert.vue";
 
 Vue.use(VueRouter);
 
@@ -27,6 +28,12 @@ const routes = [
     path: "/addAdvert",
     name: "AddAdvert",
     component: AddAdvert
+  },
+  {
+    path: "/advert/:advertId",
+    name: "Advert",
+    component: Advert,
+    props: true
   }
 ];
 

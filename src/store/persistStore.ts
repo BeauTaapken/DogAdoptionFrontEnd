@@ -20,33 +20,44 @@ export default new Vuex.Store({
     SET_USER (state, value) {
       state.user = value;
     },
-    // SET_ADVERTS(state, value) {
-    //   if(state.adverts === null){
-    //     state.adverts = [];
-    //   }
-    //   for(let i = 0; i < value.length; i++){
-    //     state.adverts.push(value[i]);
-    //   }
-    // }
+    SET_ADVERTS(state, value) {
+      for(let i = 0; i < value.length; i++){
+        const lowercaseBreed = value[i].breed.toLowerCase().replace(/_/g, " ");
+        value[i].breed = lowercaseBreed.charAt(0).toUpperCase() + lowercaseBreed.slice(1);
+        state.adverts.push(value[i]);
+      }
+    },
+    RESET_ADVERTS(state){
+      state.adverts = [];
+    },
+    RESET_VALUES(state) {
+      state.user = null;
+      state.adverts = [];
+    }
   },
   actions: {
     setUser ({commit}, value) {
       commit('SET_USER', value);
     },
-    // setAdverts({commit}, data){
-    //   commit('SET_ADVERTS', data);
-    // },
+    setAdverts({commit}, data){
+      commit('SET_ADVERTS', data);
+    },
+    resetAdverts({commit}){
+      commit('RESET_ADVERTS');
+    },
+    resetValues({commit}){
+      commit('RESET_VALUES');
+    }
   },
   modules: {},
-  // @Component({
-  //   computed: {
-  //     ...mapGetters('UserModule', {
-  //        'getUser': any
-  //     })
-  //   }
-  // })
   getters: {
     getUser: state => state.user,
-    // getAdverts: state => state.adverts
+    getAdverts: state => state.adverts,
+    getAdvert(state) {
+      return (keyword: number) =>
+        state.adverts.find(
+          (advert: { advertId: number }) => advert.advertId == keyword
+        );
+    }
   }
 });

@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <v-content>
-      <Navbar v-if="user"/>
+      <Navbar class="background" v-if="user"/>
       <router-view/>
     </v-content>
   </v-app>
@@ -21,40 +21,38 @@ export default Vue.extend({
     Navbar
   },
 
-  // data() {
-  //   return {
-  //     user: "" as any
-  //   };
-  // },
-
   data: () => ({
     user: null as any
   }),
   mounted(): void {
     firebase.auth().onAuthStateChanged((user) => {
-      console.log(user)
       if (user) {
         store.dispatch("setUser", user);
         this.user = store.getters.getUser;
         // router.push({ name: "Home" });
-      } else {
-        router.push({ name: "Login" });
+        // } else {
+        //   router.push({ name: "Login" });
       }
     });
   },
   watch: {
     $route() {
       firebase.auth().onAuthStateChanged((user) => {
-        console.log(user)
         if (user) {
           store.dispatch("setUser", user);
           this.user = store.getters.getUser;
           // router.push({ name: "Home" });
-        } else {
-          router.push({ name: "Login" });
+          // } else {
+          //   router.push({ name: "Login" });
         }
       });
     }
   }
 });
 </script>
+
+<style scoped>
+  .background {
+    background: linear-gradient(to right, #36d1dc, #3bc8dd, #47aee0, #5b86e5);
+  }
+</style>

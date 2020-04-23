@@ -1,11 +1,8 @@
 <template>
-  <v-app-bar app>
+  <v-app-bar app v-if="username != null">
     <v-toolbar-items>
       <v-btn to="/Home" text>Home</v-btn>
       <v-btn to="/addAdvert" text>Add an advert</v-btn>
-      <v-btn to="/textchat" text>Textchat</v-btn>
-      <v-btn to="/searchfriends" text>Search friends</v-btn>
-      <v-btn to="/webcamchat" text>Videochat</v-btn>
     </v-toolbar-items>
 
     <v-spacer></v-spacer>
@@ -29,7 +26,7 @@ import router from "@/router";
 export default Vue.extend({
   name: "Navbar",
   data: () => ({
-    username: "" as any
+    username: null as string | null
   }),
   mounted(): void {
     this.username = store.getters.getUser.displayName;
@@ -40,14 +37,27 @@ export default Vue.extend({
         .auth()
         .signOut()
         .then(() => {
-          sessionStorage.clear();
-          store.commit("setUser", null);
-          router.push({ name: "Login" })
+          this.username = null
+          store.dispatch("resetValues");
+          window.sessionStorage.clear();
+          router.push({ name: "Login" });
         })
         .catch(function(error) {
           // An error happened.
         });
+
+    }
+  },
+  watch: {
+    $route() {
+      this.username = store.getters.getUser.displayName;
     }
   }
 });
 </script>
+
+<style scoped>
+  .background {
+    background-image: url("../assets/paw.png");
+  }
+</style>
