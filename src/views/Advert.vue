@@ -34,6 +34,7 @@
                 <v-btn v-if="isSameUser" @click="DeleteAdvert" class="primary"
                   >Delete advert</v-btn
                 >
+<!--                TODO Mailing functionality in frontend-->
                 <v-btn v-if="!isSameUser">Mail owner of dog</v-btn>
               </v-card-actions>
             </v-card>
@@ -145,7 +146,7 @@ export default Vue.extend({
     },
 
     UpdateAdvert() {
-      console.log("update");
+      router.push({ path: "update/" + this.advertId });
     },
 
     DeleteAdvert() {

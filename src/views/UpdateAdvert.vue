@@ -13,7 +13,6 @@
                 v-model="image"
                 counter
                 show-size
-                multiple
                 :rules="imageRule"
                 @change="getBase64"
                 prepend-icon=""
@@ -64,7 +63,7 @@
               <v-text-field v-model="longtitude" v-show="false" required :rules="numberRules"></v-text-field>
               <v-text-field v-model="place" v-show="false" required :rules="textRules"></v-text-field>
               <v-btn @click="addAdvert">
-                Add advert
+                Update advert
               </v-btn>
             </v-col>
 
@@ -107,22 +106,29 @@ import Vue from "vue";
 import axios from "axios";
 import store from "../store/persistStore";
 import * as firebase from "firebase";
-import Mapbox from "mapbox-gl";
-import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
 import { MglMap } from "vue-mapbox";
+import Mapbox, { Marker } from "mapbox-gl";
+import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
 
 export default Vue.extend({
-  name: "AddAdvert",
+  name: "UpdateAdvert",
+  props: {
+    advertId: {
+      required: true
+    }
+  },
   data: function() {
     return {
       user: null as any,
       items: [] as any,
+      advert: null as any,
       image: null as Blob | null,
       title: null as string | null,
       description: null as string | null,
       breed: null as number | null,
+      oldBreed: null as any,
       age: null as number | null,
-      base64: null as string | null,
+      base64: null as string | ArrayBuffer | null,
       dialog: false as boolean,
       dialogHeader: "" as string,
       dialogInfo: "" as string,
@@ -143,7 +149,21 @@ export default Vue.extend({
     MglMap
   },
   created() {
+    this.advert = store.getters.getAdvert(this.advertId);
     this.mapbox = Mapbox;
+    this.image = this.b64toBlob(this.advert.img);
+
+    this.getBase64();
+    //this.base64 = this.advert.img;
+    this.title = this.advert.title;
+    this.description = this.advert.description;
+
+    this.oldBreed = this.advert.breed;
+
+    this.age = this.advert.age;
+    this.longtitude = this.advert.longtitude;
+    this.latitude = this.advert.latitude;
+    this.place = this.advert.place;
   },
   mounted(): void {
     this.user = store.getters.getUser;
@@ -154,11 +174,49 @@ export default Vue.extend({
           .toLowerCase()
           .replace(/_/g, " ");
         const breed = lowercase.charAt(0).toUpperCase() + lowercase.slice(1);
+
         this.items.push({ value: i, breedName: breed });
+        //TODO make breed autoselect
       }
     });
   },
   methods: {
+    b64toBlob(dataURI: string) {
+
+      const byteString = atob(dataURI.split(',')[1]);
+      const ab = new ArrayBuffer(byteString.length);
+      const ia = new Uint8Array(ab);
+
+      for (let i = 0; i < byteString.length; i++) {
+        ia[i] = byteString.charCodeAt(i);
+      }
+      return new Blob([ab], { type: 'image/jpeg' });
+    },
+
+    onMapLoaded(event: any) {
+      event.map.jumpTo({
+        center: [this.advert.longtitude, this.advert.latitude],
+        zoom: 13
+      });
+
+        event.map.addControl(
+          new MapboxGeocoder({
+            accessToken: this.accessToken,
+            mapboxgl: Mapbox,
+            marker: true,
+            getItemValue: (e: any) => {
+              this.longtitude = e.geometry.coordinates[0];
+              this.latitude = e.geometry.coordinates[1];
+              this.place = e.place_name;
+            }
+          })
+        );
+
+      new Marker()
+      .setLngLat([this.advert.longtitude, this.advert.latitude])
+      .addTo(event.map);
+    },
+
     async addAdvert() {
       if (
         (this.$refs.addadvertform as Vue & {
@@ -171,9 +229,10 @@ export default Vue.extend({
             .getIdToken(/* forceRefresh */ true)
             .then((idToken: string) => {
               axios
-                .post(
-                  "/advert/addadvert",
+                .put(
+                  "/advert/updateadvert",
                   {
+                    advertId: this.advertId,
                     UUID: {
                       UUID: this.user.uid,
                       Username: this.user.displayName
@@ -196,7 +255,7 @@ export default Vue.extend({
                 .then(response => {
                   this.dialog = true;
                   if (response.data.responseCode === "Done") {
-                    this.dialogHeader = "Your advert has been created";
+                    this.dialogHeader = "Your advert has been updated";
                     this.dialogInfo = "";
                   } else {
                     this.dialogHeader = "Something went wrong";
@@ -223,35 +282,32 @@ export default Vue.extend({
 
     getBase64() {
       if (this.image !== null) {
-        for (let i = 0; i < this.image.length; i++) {
-          const reader = new FileReader();
-          reader.readAsDataURL(this.image[i]);
+        // for (let i = 0; i < this.image.length; i++) {
+        //   console.log("for loop");
+        //   const reader = new FileReader();
+        //   reader.readAsDataURL(this.image[i]);
+        //
+        //   console.log("now in readasdataurl");
+        //
+        //   reader.onloadend = () => {
+        //     console.log("result: " + reader.result);
+        //     this.base64 = reader.result;
+        //     console.log("result: " + reader.result);
+        //   };
+        //   reader.onerror = error => {
+        //     console.log("Error: ", error);
+        //   };
+        // }
+        const reader = new FileReader();
+        reader.readAsDataURL(this.image);
 
-          reader.onloadend = () => {
-            this.base64 = reader.result;
-          };
-          reader.onerror = error => {
-            console.log("Error: ", error);
-          };
-        }
+        reader.onloadend = () => {
+          this.base64 = reader.result;
+        };
+        reader.onerror = error => {
+          console.log("Error: ", error);
+        };
       }
-    },
-
-    onMapLoaded(event: any) {
-      event.map.jumpTo({ center: [5, 52], zoom: 8 });
-
-      event.map.addControl(
-        new MapboxGeocoder({
-          accessToken: this.accessToken,
-          mapboxgl: Mapbox,
-          marker: true,
-          getItemValue: (e: any) => {
-            this.longtitude = e.geometry.coordinates[0];
-            this.latitude = e.geometry.coordinates[1];
-            this.place = e.place_name;
-          }
-        })
-      );
     }
   }
 });

@@ -13,7 +13,6 @@
                 v-model="image"
                 counter
                 show-size
-                multiple
                 :rules="imageRule"
                 @change="getBase64"
                 prepend-icon=""
@@ -122,7 +121,7 @@ export default Vue.extend({
       description: null as string | null,
       breed: null as number | null,
       age: null as number | null,
-      base64: null as string | null,
+      base64: null as string | ArrayBuffer | null,
       dialog: false as boolean,
       dialogHeader: "" as string,
       dialogInfo: "" as string,
@@ -223,17 +222,26 @@ export default Vue.extend({
 
     getBase64() {
       if (this.image !== null) {
-        for (let i = 0; i < this.image.length; i++) {
-          const reader = new FileReader();
-          reader.readAsDataURL(this.image[i]);
+        // for (let i = 0; i < this.image.length; i++) {
+        //   const reader = new FileReader();
+        //   reader.readAsDataURL(this.image[i]);
+        //
+        //   reader.onloadend = () => {
+        //     this.base64 = reader.result;
+        //   };
+        //   reader.onerror = error => {
+        //     console.log("Error: ", error);
+        //   };
+        // }
+        const reader = new FileReader();
+        reader.readAsDataURL(this.image);
 
-          reader.onloadend = () => {
-            this.base64 = reader.result;
-          };
-          reader.onerror = error => {
-            console.log("Error: ", error);
-          };
-        }
+        reader.onloadend = () => {
+          this.base64 = reader.result;
+        };
+        reader.onerror = error => {
+          console.log("Error: ", error);
+        };
       }
     },
 
