@@ -31,7 +31,7 @@
     "vuex-persist": "^2.2.0"
   },
   "devDependencies": {
-    "@types/jest": "^24.0.19",
+    "@types/jest": "^24.9.1",
     "@types/mapbox-gl": "^1.8.3",
     "@typescript-eslint/eslint-plugin": "^2.18.0",
     "@typescript-eslint/parser": "^2.18.0",
@@ -48,10 +48,12 @@
     "eslint": "^6.7.2",
     "eslint-plugin-prettier": "^3.1.1",
     "eslint-plugin-vue": "^6.1.2",
+    "jest": "^25.4.0",
     "node-sass": "^4.13.1",
     "prettier": "^1.19.1",
     "sass": "^1.19.0",
     "sass-loader": "^8.0.2",
+    "ts-jest": "^25.4.0",
     "typescript": "~3.7.5",
     "vue-cli-plugin-vuetify": "~2.0.4",
     "vue-template-compiler": "^2.6.11",
