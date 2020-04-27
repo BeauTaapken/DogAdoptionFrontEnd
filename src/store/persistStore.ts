@@ -17,7 +17,7 @@ export default new Vuex.Store({
     adverts: [] as []
   },
   mutations: {
-    SET_USER (state, value) {
+    SET_USER (state: any, value) {
       state.user = value;
     },
     SET_ADVERTS(state, value) {
