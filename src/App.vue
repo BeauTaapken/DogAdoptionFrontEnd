@@ -9,10 +9,10 @@
 
 <script lang="ts">
 import Vue from "vue";
-import Navbar from "./components/Navbar.vue";
+import Navbar from "@/components/Navbar.vue";
 import * as firebase from "firebase";
-import router from "./router";
-import store from "./store/persistStore";
+import router from "@/router";
+import store from "@/store/persistStore";
 
 export default Vue.extend({
   name: "App",

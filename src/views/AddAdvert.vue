@@ -104,7 +104,7 @@
 <script lang="ts">
 import Vue from "vue";
 import axios from "axios";
-import store from "../store/persistStore";
+import store from "@/store/persistStore";
 import * as firebase from "firebase";
 import Mapbox from "mapbox-gl";
 import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";

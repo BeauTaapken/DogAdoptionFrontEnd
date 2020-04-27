@@ -70,10 +70,10 @@
 
 <script lang="ts">
 import firebase from "firebase";
-import router from "../router";
+import router from "@/router";
 import Vue from "vue";
 import axios from "axios";
-import store from "../store/persistStore";
+import store from "@/store/persistStore";
 
 export default Vue.extend({
   name: "Login" as string,

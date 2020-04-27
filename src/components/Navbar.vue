@@ -19,7 +19,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import store from "../store/persistStore";
+import store from "@/store/persistStore";
 import * as firebase from "firebase";
 import router from "@/router";
 

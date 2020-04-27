@@ -17,8 +17,8 @@
 
 <script lang="ts">
   import Vue from "vue";
-  import advert from "../views/Advert.vue";
-  import router from "../router";
+  import advert from "@/views/Advert.vue";
+  import router from "@/router";
 
 export default Vue.extend({
   name: "advert",

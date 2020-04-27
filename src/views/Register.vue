@@ -94,7 +94,7 @@
 
 <script lang="ts">
 import firebase from "firebase";
-import router from "../router";
+import router from "@/router";
 import Vue from "vue";
 import axios from "axios";
 

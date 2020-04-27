@@ -15,9 +15,9 @@
 <script lang="ts">
 import Vue from "vue";
 import axios from "axios";
-import store from "../store/persistStore";
+import store from "@/store/persistStore";
 import InfiniteLoading from "vue-infinite-loading";
-import advert from "../components/AdvertPreview.vue";
+import advert from "@/components/AdvertPreview.vue";
 
 const Advert = Vue.extend(advert);
 
