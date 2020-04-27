@@ -1,12 +1,30 @@
-import { shallowMount } from "@vue/test-utils";
-import Navbar from "../Navbar.vue";
+import Vue from "vue";
+import Vuetify from "vuetify";
+
+import Navbar from "@/components/Navbar";
+
+import { mount, createLocalVue } from "@vue/test-utils";
+
+const localVue = createLocalVue();
 
 describe("Navbar.vue", () => {
+  let vuetify : any;
+
+  beforeEach(() => {
+    vuetify = new Vuetify();
+  });
+
   it("renders props.msg when passed", () => {
-    const msg = "new message";
-    const wrapper = shallowMount(Navbar, {
-      propsData: { msg }
+    const wrapper = mount(Navbar, {
+      localVue,
+      vuetify,
+      data: () => ({
+        username: "tester",
+      })
     });
-    expect(wrapper.text()).toMatch(msg);
+
+    const name = wrapper.find("v-toolbar-title");
+
+    expect(name.text()).toBe("tester");
   });
 });
