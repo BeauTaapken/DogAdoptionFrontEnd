@@ -1,7 +1,7 @@
 import Vue from "vue";
 import Vuetify from "vuetify";
 
-import Navbar from "@/components/Navbar";
+import Navbar from "@/components/Navbar.vue";
 
 import { mount, createLocalVue } from "@vue/test-utils";
 

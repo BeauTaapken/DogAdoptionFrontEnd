@@ -5,7 +5,8 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "test:unit": "jest",
+    "test:unit": "vue-cli-service test:unit test/setup.ts src/**/__tests__/*.spec.ts",
+    "test": "mochapack --webpack-config webpack.config.js --require test/setup.ts test/**/*.spec.ts",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
@@ -13,6 +14,7 @@
     "@fortawesome/free-solid-svg-icons": "^5.12.1",
     "@fortawesome/vue-fontawesome": "^0.1.9",
     "@mapbox/mapbox-gl-geocoder": "^4.5.1",
+    "@vue/cli-plugin-unit-mocha": "^4.3.1",
     "axios": "^0.19.2",
     "core-js": "^3.6.4",
     "firebase": "^7.8.1",
