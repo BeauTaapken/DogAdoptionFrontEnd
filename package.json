@@ -5,8 +5,8 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "test:unit": "vue-cli-service test:unit test/setup.ts src/**/__tests__/*.spec.ts",
-    "test": "mochapack --webpack-config webpack.config.js --require test/setup.ts test/**/*.spec.ts",
+    "test:unit": "jest",
+    "test": "mochapack --webpack-config webpack.config.js --require src/setup.ts test/**/*.spec.ts",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
@@ -47,11 +47,13 @@
     "@vue/eslint-config-prettier": "^6.0.0",
     "@vue/eslint-config-typescript": "^5.0.1",
     "@vue/test-utils": "^1.0.0-beta.31",
+    "electron": "^8.2.4",
     "eslint": "^6.7.2",
     "eslint-plugin-prettier": "^3.1.1",
     "eslint-plugin-vue": "^6.1.2",
     "jest": "^25.4.0",
     "node-sass": "^4.13.1",
+    "null-loader": "^4.0.0",
     "prettier": "^1.19.1",
     "sass": "^1.19.0",
     "sass-loader": "^8.0.2",
@@ -104,6 +106,9 @@
     "transform": {
       ".*\\.(vue)$": "vue-jest",
       "^.+\\.tsx?$": "ts-jest"
+    },
+    "moduleNameMapper": {
+      "^@/(.*)$": "<rootDir>/src/$1"
     },
     "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
     "testURL": "http://localhost/"

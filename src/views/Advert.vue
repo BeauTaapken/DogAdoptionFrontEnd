@@ -86,7 +86,6 @@ import store from "@/store/persistStore";
 import Mapbox, { Marker } from "mapbox-gl";
 import { MglMap } from "vue-mapbox";
 import axios from "axios";
-import { isSameRoute } from "vue-router/src/util/route";
 import router from "@/router";
 import * as firebase from "firebase";
 
