@@ -108,7 +108,7 @@ import store from "@/store/persistStore";
 import * as firebase from "firebase";
 import { MglMap } from "vue-mapbox";
 import Mapbox, { Marker } from "mapbox-gl";
-import { MapboxGeocoder } from "@mapbox/mapbox-gl-geocoder";
+import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
 
 export default Vue.extend({
   name: "UpdateAdvert",
@@ -244,7 +244,7 @@ export default Vue.extend({
                     age: Number(this.age),
                     longtitude: this.longtitude,
                     latitude: this.latitude,
-                    place: this.place,
+                    place: this.place
                   },
                   {
                     headers: {
