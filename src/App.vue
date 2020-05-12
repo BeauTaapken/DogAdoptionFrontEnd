@@ -29,9 +29,6 @@ export default Vue.extend({
       if (user) {
         store.dispatch("setUser", user);
         this.user = store.getters.getUser;
-        // router.push({ name: "Home" });
-        // } else {
-        //   router.push({ name: "Login" });
       }
     });
   },
@@ -41,9 +38,6 @@ export default Vue.extend({
         if (user) {
           store.dispatch("setUser", user);
           this.user = store.getters.getUser;
-          // router.push({ name: "Home" });
-          // } else {
-          //   router.push({ name: "Login" });
         }
       });
     }

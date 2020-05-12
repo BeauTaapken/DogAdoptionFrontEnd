@@ -9,9 +9,9 @@
 
     <v-toolbar-title>{{ username }}</v-toolbar-title>
 
-      <v-btn @click="logout" icon>
-        <i class="fas fa-power-off"></i>
-      </v-btn>
+    <v-btn @click="logout" icon aria-label="Logout">
+      <i class="fas fa-power-off"></i>
+    </v-btn>
   </v-app-bar>
 </template>
 
@@ -34,7 +34,7 @@ export default Vue.extend({
         .auth()
         .signOut()
         .then(() => {
-          this.username = null
+          this.username = null;
           this.$store.dispatch("resetValues");
           window.sessionStorage.clear();
           router.push({ name: "Login" });

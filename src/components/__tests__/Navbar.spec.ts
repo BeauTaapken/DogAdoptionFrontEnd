@@ -12,7 +12,6 @@ describe("Navbar", () => {
       localVue: localVue,
       store
     });
-    // const name = wrapper.find(".v-toolbar-title > span");
 
     const name = wrapper.vm.$data;
 
