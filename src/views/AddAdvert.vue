@@ -104,7 +104,6 @@
 <script lang="ts">
 import Vue from "vue";
 import axios from "axios";
-import store from "@/store/persistStore";
 import * as firebase from "firebase";
 import Mapbox from "mapbox-gl";
 import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
@@ -145,7 +144,7 @@ export default Vue.extend({
     this.mapbox = Mapbox;
   },
   mounted(): void {
-    this.user = store.getters.getUser;
+    this.user = this.$store.getters.getUser;
 
     axios.get("/enum/getdogbreeds").then(response => {
       for (let i = 0; i < response.data.breeds.length; i++) {
@@ -194,7 +193,7 @@ export default Vue.extend({
                 )
                 .then(response => {
                   this.dialog = true;
-                  if (response.data.responseCode === "Done") {
+                  if (response.status === 200) {
                     this.dialogHeader = "Your advert has been created";
                     this.dialogInfo = "";
                   } else {

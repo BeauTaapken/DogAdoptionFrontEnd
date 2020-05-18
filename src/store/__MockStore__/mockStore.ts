@@ -13,8 +13,35 @@ const vuexPersist = new VuexPersist({
 export default new Vuex.Store({
   plugins: [vuexPersist.plugin],
   state: {
-    user: { displayName: "test" } as any,
-    adverts: [] as []
+    user: { uid: "testuser", displayName: "test" } as any,
+    adverts: [
+      {
+        advertId: "advertid",
+        UUID: { UUID: "testuser", Username: "Test" },
+        age: 1,
+        breed: "Labrador",
+        date: "2020-05-04T11:47:39",
+        description: "testdescription",
+        img: "testimg",
+        latitude: 51.4519,
+        longtitude: 5.48094,
+        place: "Rachelsmolen R1, Eindhoven, Noord-Brabant 5612 MA, Nederland",
+        title: "testname"
+      },
+      {
+        advertId: "testAdvertId",
+        UUID: { UUID: "testuser", Username: "Test" },
+        age: 1,
+        breed: "Labrador",
+        date: "2020-05-04T11:47:39",
+        description: "testdescription",
+        img: "testimg",
+        latitude: 51.4519,
+        longtitude: 5.48094,
+        place: "Rachelsmolen R1, Eindhoven, Noord-Brabant 5612 MA, Nederland",
+        title: "testname"
+      }
+    ] as any
   },
   mutations: {
     SET_USER (state: any, value) {

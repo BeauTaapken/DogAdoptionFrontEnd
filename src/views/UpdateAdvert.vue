@@ -104,7 +104,6 @@
 <script lang="ts">
 import Vue from "vue";
 import axios from "axios";
-import store from "@/store/persistStore";
 import * as firebase from "firebase";
 import { MglMap } from "vue-mapbox";
 import Mapbox, { Marker } from "mapbox-gl";
@@ -149,7 +148,7 @@ export default Vue.extend({
     MglMap
   },
   created() {
-    this.advert = store.getters.getAdvert(this.advertId);
+    this.advert = this.$store.getters.getAdvert(this.advertId);
     this.mapbox = Mapbox;
     this.image = this.b64toBlob(this.advert.img);
 
@@ -166,7 +165,7 @@ export default Vue.extend({
     this.place = this.advert.place;
   },
   mounted(): void {
-    this.user = store.getters.getUser;
+    this.user = this.$store.getters.getUser;
 
     axios.get("/enum/getdogbreeds").then(response => {
       for (let i = 0; i < response.data.breeds.length; i++) {
@@ -254,7 +253,7 @@ export default Vue.extend({
                 )
                 .then(response => {
                   this.dialog = true;
-                  if (response.data.responseCode === "Done") {
+                  if (response.status === 200) {
                     this.dialogHeader = "Your advert has been updated";
                     this.dialogInfo = "";
                   } else {

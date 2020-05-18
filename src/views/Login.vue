@@ -73,7 +73,6 @@ import firebase from "firebase";
 import router from "@/router";
 import Vue from "vue";
 import axios from "axios";
-import store from "@/store/persistStore";
 
 export default Vue.extend({
   name: "Login" as string,
@@ -111,7 +110,7 @@ export default Vue.extend({
                         photoURL: null
                       })
                       .then(() => {
-                        store.dispatch("setUser", user.user);
+                        this.$store.dispatch("setUser", user.user);
                         router.push({ name: "Home" });
                       })
                       .catch(error => {

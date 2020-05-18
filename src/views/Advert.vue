@@ -28,14 +28,14 @@
               <v-card-title>User:</v-card-title>
               <v-card-text>{{ advertUser }}</v-card-text>
               <v-card-actions>
-                <v-btn v-if="isSameUser" @click="UpdateAdvert" class="primary"
+                <v-btn v-if="isSameUser" name="update" @click="UpdateAdvert" class="primary update"
                   >Update advert</v-btn
                 >
-                <v-btn v-if="isSameUser" @click="DeleteAdvert" class="primary"
+                <v-btn v-if="isSameUser" name="delete" @click="DeleteAdvert" class="primary delete"
                   >Delete advert</v-btn
                 >
 <!--                TODO Mailing functionality in frontend-->
-                <v-btn v-if="!isSameUser">Mail owner of dog</v-btn>
+                <v-btn v-if="!isSameUser" name="mail" class="primary mail">Mail owner of dog</v-btn>
               </v-card-actions>
             </v-card>
           </v-col>
@@ -82,7 +82,6 @@
 
 <script lang="ts">
 import Vue from "vue";
-import store from "@/store/persistStore";
 import Mapbox, { Marker } from "mapbox-gl";
 import { MglMap } from "vue-mapbox";
 import axios from "axios";
@@ -115,11 +114,11 @@ export default Vue.extend({
     };
   },
   created(): void {
-    this.advert = store.getters.getAdvert(this.advertId);
+    this.advert = this.$store.getters.getAdvert(this.advertId);
     this.mapbox = Mapbox;
   },
   mounted(): void {
-    this.user = store.getters.getUser;
+    this.user = this.$store.getters.getUser;
     //TODO get advert based data like bids with api call
 
     axios
@@ -163,7 +162,7 @@ export default Vue.extend({
               })
               .then(response => {
                 this.dialog = true;
-                if (response.data.responseCode === "Done") {
+                if (response.status === 200) {
                   router.push({ name: "Home" });
                 } else {
                   this.dialogHeader = "Something went wrong";

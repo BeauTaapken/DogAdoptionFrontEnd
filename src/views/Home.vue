@@ -15,7 +15,6 @@
 <script lang="ts">
 import Vue from "vue";
 import axios from "axios";
-import store from "@/store/persistStore";
 import InfiniteLoading from "vue-infinite-loading";
 import advert from "@/components/AdvertPreview.vue";
 
@@ -35,8 +34,8 @@ export default Vue.extend({
     InfiniteLoading
   },
   mounted(): void {
-    this.user = store.getters.getUser;
-    store.dispatch("resetAdverts");
+    this.user = this.$store.getters.getUser;
+    this.$store.dispatch("resetAdverts");
   },
   methods: {
     infiniteHandler: function($state: any) {
@@ -46,7 +45,7 @@ export default Vue.extend({
           .get("/advert/getadverts?page=" + this.page + "&size=" + this.size)
           .then(response => {
             const data = response.data;
-            store.dispatch("setAdverts", data);
+            this.$store.dispatch("setAdverts", data);
             $state.loaded();
             if (response.data.length <= 0) {
               $state.complete();
@@ -58,7 +57,7 @@ export default Vue.extend({
       }
     },
     getAdvert() {
-      return store.getters.getAdverts;
+      return this.$store.getters.getAdverts;
     }
   }
 });
