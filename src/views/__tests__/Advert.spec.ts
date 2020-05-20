@@ -1,5 +1,5 @@
 import Advert from "@/views/Advert.vue";
-import {createLocalVue, shallowMount} from "@vue/test-utils";
+import {createLocalVue, mount, shallowMount} from "@vue/test-utils";
 import Vuetify from "@/plugins/__mockPlugin__/mockVuetify";
 import store from "@/store/__MockStore__/mockStore";
 
@@ -24,7 +24,7 @@ localVue.use(Vuetify);
 
 describe("Advert", () => {
   it("renders mail button when not the same user as poster", () => {
-    const wrapper = shallowMount(Advert, {
+    const wrapper = mount(Advert, {
       localVue: localVue,
       store,
       propsData: {
