@@ -4,16 +4,18 @@
       <v-flex xs12 sm8 md6>
         <v-row>
           <v-col cols="8">
-            <v-carousel
-              class="rounded"
-              cycle
-              height="400"
-              hide-delimiter-background
-              show-arrows-on-hover
-            >
-              <!--          <v-carousel-item v-for="(image, i) in advert.img" :key="i" v-bind:src="image">-->
-              <v-carousel-item v-bind:src="advert.img" />
-            </v-carousel>
+            <!--            TODO if multiple images get supported in backend make use of v-carousel, research how to fix breaking test "cannot read property 't' of undefined" when using mount instead of shallowmount-->
+            <!--            <v-carousel-->
+            <!--              class="rounded"-->
+            <!--              cycle-->
+            <!--              height="400"-->
+            <!--              hide-delimiter-background-->
+            <!--              show-arrows-on-hover-->
+            <!--            >-->
+            <!--              &lt;!&ndash;          <v-carousel-item v-for="(image, i) in advert.img" :key="i" v-bind:src="image">&ndash;&gt;-->
+            <!--              <v-carousel-item v-bind:src="advert.img" />-->
+            <!--            </v-carousel>-->
+            <v-img class="rounded" height="400" v-bind:src="advert.img"></v-img>
           </v-col>
           <v-col cols="4">
             <v-card height="400" class="mx-auto card" max-width="700" outlined>
@@ -28,14 +30,23 @@
               <v-card-title>User:</v-card-title>
               <v-card-text>{{ advertUser }}</v-card-text>
               <v-card-actions>
-                <v-btn v-if="isSameUser" name="update" @click="UpdateAdvert" class="primary update"
+                <v-btn
+                  v-if="isSameUser"
+                  name="update"
+                  @click="UpdateAdvert"
+                  class="primary update"
                   >Update advert</v-btn
                 >
-                <v-btn v-if="isSameUser" name="delete" @click="DeleteAdvert" class="primary delete"
+                <v-btn
+                  v-if="isSameUser"
+                  name="delete"
+                  @click="DeleteAdvert"
+                  class="primary delete"
                   >Delete advert</v-btn
                 >
-<!--                TODO Mailing functionality in frontend-->
-                <v-btn v-if="!isSameUser" name="mail" class="primary mail">Mail owner of dog</v-btn>
+                <v-btn v-if="!isSameUser" name="mail" class="primary mail"
+                  >Mail owner of dog</v-btn
+                >
               </v-card-actions>
             </v-card>
           </v-col>
@@ -119,13 +130,14 @@ export default Vue.extend({
   },
   mounted(): void {
     this.user = this.$store.getters.getUser;
+    this.isSameUser = this.user.uid === this.advert.UUID.UUID;
+
     //TODO get advert based data like bids with api call
 
     axios
       .get("user/getuser/" + this.advert.UUID.UUID)
       .then(response => {
         this.advertUser = response.data;
-        this.isSameUser = this.user.uid === this.advert.UUID.UUID;
       })
       .catch(error => {
         console.log(error);

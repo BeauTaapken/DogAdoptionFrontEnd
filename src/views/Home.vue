@@ -39,7 +39,6 @@ export default Vue.extend({
   },
   methods: {
     infiniteHandler: function($state: any) {
-      const advertLocation = this.$refs.advertLocation;
       try {
         axios
           .get("/advert/getadverts?page=" + this.page + "&size=" + this.size)

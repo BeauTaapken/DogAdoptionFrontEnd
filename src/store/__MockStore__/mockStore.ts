@@ -17,7 +17,7 @@ export default new Vuex.Store({
     adverts: [
       {
         advertId: "advertid",
-        UUID: { UUID: "testuser", Username: "Test" },
+        UUID: { UUID: "testuser", Username: "test" },
         age: 1,
         breed: "Labrador",
         date: "2020-05-04T11:47:39",
@@ -30,7 +30,7 @@ export default new Vuex.Store({
       },
       {
         advertId: "testAdvertId",
-        UUID: { UUID: "testuser", Username: "Test" },
+        UUID: { UUID: "othertestuser", Username: "othertestuser" },
         age: 1,
         breed: "Labrador",
         date: "2020-05-04T11:47:39",

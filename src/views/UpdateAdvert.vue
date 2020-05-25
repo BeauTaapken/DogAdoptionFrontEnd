@@ -2,7 +2,7 @@
   <v-container fluid fill-height>
     <v-layout justify-center align-center>
       <v-flex xs24 sm16 md6>
-        <v-form ref="addadvertform">
+        <v-form ref="addadvertform" lazy-validation>
           <v-row>
             <v-col>
               <v-file-input

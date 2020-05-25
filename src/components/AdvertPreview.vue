@@ -27,6 +27,9 @@ export default Vue.extend({
       required: true
     }
   },
+  mounted(){
+    console.log(this.data)
+  },
   methods: {
     goToAdvert(advertId: number) {
       router.push({ path: "advert/" + advertId });

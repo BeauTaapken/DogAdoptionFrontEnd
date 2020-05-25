@@ -16,7 +16,7 @@
             </v-tooltip>
           </v-toolbar>
           <v-card-text>
-            <v-form ref="registerform">
+            <v-form ref="registerform" lazy-validation>
               <v-text-field
                 label="Username"
                 name="username"
