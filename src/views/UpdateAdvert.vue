@@ -1,7 +1,7 @@
 <template>
   <v-container fluid fill-height>
     <v-layout justify-center align-center>
-      <v-flex xs24 sm16 md6>
+      <v-flex xs24 sm16 md6 v-if="advert !== null">
         <v-form ref="addadvertform" lazy-validation>
           <v-row>
             <v-col>
@@ -148,21 +148,8 @@ export default Vue.extend({
     MglMap
   },
   created() {
-    this.advert = this.$store.getters.getAdvert(this.advertId);
+    this.loadData();
     this.mapbox = Mapbox;
-    this.image = this.b64toBlob(this.advert.img);
-
-    this.getBase64();
-    //this.base64 = this.advert.img;
-    this.title = this.advert.title;
-    this.description = this.advert.description;
-
-    this.oldBreed = this.advert.breed;
-
-    this.age = this.advert.age;
-    this.longtitude = this.advert.longtitude;
-    this.latitude = this.advert.latitude;
-    this.place = this.advert.place;
   },
   mounted(): void {
     this.user = this.$store.getters.getUser;
@@ -180,6 +167,31 @@ export default Vue.extend({
     });
   },
   methods: {
+    loadData() {
+      axios
+      .get("advert/getadvert/" + this.advertId)
+      .then(response => {
+        if (response.status === 200) {
+          this.advert = response.data;
+          this.image = this.b64toBlob(this.advert.img);
+
+          this.getBase64();
+          this.title = this.advert.title;
+          this.description = this.advert.description;
+
+          this.oldBreed = this.advert.breed;
+
+          this.age = this.advert.age;
+          this.longtitude = this.advert.longtitude;
+          this.latitude = this.advert.latitude;
+          this.place = this.advert.place;
+        }
+      })
+      .catch(error => {
+        console.log(error);
+      });
+    },
+
     b64toBlob(dataURI: string) {
 
       const byteString = atob(dataURI.split(',')[1]);

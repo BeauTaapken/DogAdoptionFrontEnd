@@ -6,11 +6,30 @@ import store from "@/store/__MockStore__/mockStore";
 const localVue = createLocalVue();
 localVue.use(Vuetify);
 
+let advertData = {
+  advertId: "advertid",
+  UUID: { UUID: "testuser", Username: "test" },
+  age: 1,
+  breed: "Labrador",
+  date: "2020-05-04T11:47:39",
+  description: "testdescription",
+  img: "testimg",
+  latitude: 51.4519,
+  longtitude: 5.48094,
+  place: "Rachelsmolen R1, Eindhoven, Noord-Brabant 5612 MA, Nederland",
+  title: "testname"
+}
+
 const factory = (propsData: any) =>
   mount(Advert, {
     localVue: localVue,
     store,
-    propsData
+    propsData,
+    data() {
+      return{
+        advert: advertData
+      }
+    }
   });
 
 describe("Advert", () => {
@@ -19,6 +38,19 @@ describe("Advert", () => {
   });
 
   it("renders update and delete button when user is the same user as poster", () => {
+    advertData = {
+      advertId: "advertid",
+      UUID: { UUID: "testuser", Username: "test" },
+      age: 1,
+      breed: "Labrador",
+      date: "2020-05-04T11:47:39",
+      description: "testdescription",
+      img: "testimg",
+      latitude: 51.4519,
+      longtitude: 5.48094,
+      place: "Rachelsmolen R1, Eindhoven, Noord-Brabant 5612 MA, Nederland",
+      title: "testname"
+    };
     const updateButton = wrapper.find(".update").text();
 
     const deleteButton = wrapper.find(".delete").text();
@@ -32,6 +64,19 @@ describe("Advert", () => {
   });
 
   it("renders mail button when not the same user as poster", () => {
+    advertData = {
+      advertId: "testAdvertId",
+      UUID: { UUID: "othertestuser", Username: "othertestuser" },
+      age: 1,
+      breed: "Labrador",
+      date: "2020-05-04T11:47:39",
+      description: "testdescription",
+      img: "testimg",
+      latitude: 51.4519,
+      longtitude: 5.48094,
+      place: "Rachelsmolen R1, Eindhoven, Noord-Brabant 5612 MA, Nederland",
+      title: "testname"
+    };
     const wrapper = factory({
       advertId: "testAdvertId"
     });

@@ -1,7 +1,7 @@
 <template>
   <v-container fluid fill-height>
     <v-layout justify-center>
-      <v-flex xs12 sm8 md6>
+      <v-flex xs12 sm8 md6 v-if="advert !== null">
         <v-row>
           <v-col cols="8">
             <!--            TODO if multiple images get supported in backend make use of v-carousel, research how to fix breaking test "cannot read property 't' of undefined" when using mount instead of shallowmount-->
@@ -28,7 +28,7 @@
               <v-card-title>Location:</v-card-title>
               <v-card-text>{{ advert.place }}</v-card-text>
               <v-card-title>User:</v-card-title>
-              <v-card-text>{{ advertUser }}</v-card-text>
+              <v-card-text>{{ advert.UUID.Username }}</v-card-text>
               <v-card-actions>
                 <v-btn
                   v-if="isSameUser"
@@ -113,7 +113,6 @@ export default Vue.extend({
     return {
       advert: null as any,
       user: null as any,
-      advertUser: "" as string,
       accessToken:
         "pk.eyJ1IjoiYmVhdXRhYXBrZW4iLCJhIjoiY2s4bzYzODdlMHZxODNvbzJmN3NkajFvNiJ9.O-fXCB7kq00f3Znp68y9rQ",
       mapStyle: "mapbox://styles/mapbox/streets-v11",
@@ -124,26 +123,38 @@ export default Vue.extend({
       dialogInfo: "" as string
     };
   },
-  created(): void {
-    this.advert = this.$store.getters.getAdvert(this.advertId);
+  created() {
     this.mapbox = Mapbox;
   },
-  mounted(): void {
-    this.user = this.$store.getters.getUser;
-    this.isSameUser = this.user.uid === this.advert.UUID.UUID;
-
-    //TODO get advert based data like bids with api call
-
-    axios
-      .get("user/getuser/" + this.advert.UUID.UUID)
-      .then(response => {
-        this.advertUser = response.data;
-      })
-      .catch(error => {
-        console.log(error);
-      });
+  mounted() {
+    if (this.advert === null) {
+      this.loadData();
+    } else {
+      this.user = this.$store.getters.getUser;
+      this.isSameUser = this.user.uid === this.advert.UUID.UUID;
+    }
   },
   methods: {
+    loadData() {
+      axios
+        .get("advert/getadvert/" + this.advertId)
+        .then(response => {
+          if (response.status === 200) {
+            const lowercaseBreed = response.data.breed
+              .toLowerCase()
+              .replace(/_/g, " ");
+            response.data.breed =
+              lowercaseBreed.charAt(0).toUpperCase() + lowercaseBreed.slice(1);
+            this.advert = response.data;
+            this.user = this.$store.getters.getUser;
+            this.isSameUser = this.user.uid === this.advert.UUID.UUID;
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
+
     onMapLoaded(event: any) {
       event.map.jumpTo({
         center: [this.advert.longtitude, this.advert.latitude],

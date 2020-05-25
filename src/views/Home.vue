@@ -41,7 +41,7 @@ export default Vue.extend({
     infiniteHandler: function($state: any) {
       try {
         axios
-          .get("/advert/getadverts?page=" + this.page + "&size=" + this.size)
+          .get("/advert/getadvertpreviews?page=" + this.page + "&size=" + this.size)
           .then(response => {
             const data = response.data;
             this.$store.dispatch("setAdverts", data);
