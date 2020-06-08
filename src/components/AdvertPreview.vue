@@ -2,7 +2,7 @@
   <v-card class="mx-auto ma-7 card" max-width="700" outlined @click="goToAdvert(data.advertId)">
     <v-img
             height="300"
-            v-bind:src="data.img"
+            v-bind:src="data.image"
     ></v-img>
 
     <v-list-item three-line>

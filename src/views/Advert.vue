@@ -15,7 +15,7 @@
             <!--              &lt;!&ndash;          <v-carousel-item v-for="(image, i) in advert.img" :key="i" v-bind:src="image">&ndash;&gt;-->
             <!--              <v-carousel-item v-bind:src="advert.img" />-->
             <!--            </v-carousel>-->
-            <v-img class="rounded" height="400" v-bind:src="advert.img"></v-img>
+            <v-img class="rounded" height="400" v-bind:src="advert.image"></v-img>
           </v-col>
           <v-col cols="4">
             <v-card height="400" class="mx-auto card" max-width="700" outlined>
@@ -28,7 +28,7 @@
               <v-card-title>Location:</v-card-title>
               <v-card-text>{{ advert.place }}</v-card-text>
               <v-card-title>User:</v-card-title>
-              <v-card-text>{{ advert.UUID.Username }}</v-card-text>
+              <v-card-text>{{ advert.user.Username }}</v-card-text>
               <v-card-actions>
                 <v-btn
                   v-if="isSameUser"
@@ -131,7 +131,7 @@ export default Vue.extend({
       this.loadData();
     } else {
       this.user = this.$store.getters.getUser;
-      this.isSameUser = this.user.uid === this.advert.UUID.UUID;
+      this.isSameUser = this.user.uid === this.advert.user.UUID;
     }
   },
   methods: {
@@ -146,8 +146,9 @@ export default Vue.extend({
             response.data.breed =
               lowercaseBreed.charAt(0).toUpperCase() + lowercaseBreed.slice(1);
             this.advert = response.data;
+            console.log(this.advert);
             this.user = this.$store.getters.getUser;
-            this.isSameUser = this.user.uid === this.advert.UUID.UUID;
+            this.isSameUser = this.user.uid === this.advert.user.UUID;
           }
         })
         .catch(error => {

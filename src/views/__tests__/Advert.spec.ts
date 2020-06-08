@@ -8,7 +8,7 @@ localVue.use(Vuetify);
 
 let advertData = {
   advertId: "advertid",
-  UUID: { UUID: "testuser", Username: "test" },
+  user: { UUID: "testuser", Username: "test" },
   age: 1,
   breed: "Labrador",
   date: "2020-05-04T11:47:39",
@@ -40,7 +40,7 @@ describe("Advert", () => {
   it("renders update and delete button when user is the same user as poster", () => {
     advertData = {
       advertId: "advertid",
-      UUID: { UUID: "testuser", Username: "test" },
+      user: { UUID: "testuser", Username: "test" },
       age: 1,
       breed: "Labrador",
       date: "2020-05-04T11:47:39",
@@ -66,7 +66,7 @@ describe("Advert", () => {
   it("renders mail button when not the same user as poster", () => {
     advertData = {
       advertId: "testAdvertId",
-      UUID: { UUID: "othertestuser", Username: "othertestuser" },
+      user: { UUID: "othertestuser", Username: "othertestuser" },
       age: 1,
       breed: "Labrador",
       date: "2020-05-04T11:47:39",
